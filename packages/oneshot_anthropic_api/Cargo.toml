@@ -12,7 +12,9 @@ derive_more = { workspace = true }
 fmt-derive = { workspace = true }
 derive-getters = { workspace = true }
 anthropic-sdk = { workspace = true }
-oneshot_common = { path = "../oneshot_common" }
+oneshot_common = { path = "../oneshot_common", features = ["serde", "serde-xml-rs"] }
+oneshot_utils = { path = "../oneshot_utils" }
 anyhow = { workspace = true }
 serde_json = { workspace = true }
 tokio = { workspace = true }
+clap = { workspace = true }

@@ -1,9 +1,9 @@
 use std::future::Future;
 
-pub async fn get_string_until_finished<Get, Out>(get: Get) -> String
+pub async fn get_string_until_finished<Get, Out>(mut get: Get) -> String
 where
     Get: FnMut(&str) -> Out,
-    Out: Future<Output=(String, bool)>,
+    Out: Future<Output = (String, bool)>,
 {
     let mut string = String::new();
     loop {

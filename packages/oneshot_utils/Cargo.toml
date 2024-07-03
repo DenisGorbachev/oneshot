@@ -1,8 +1,12 @@
 [package]
-name = "cyclical_retrieval"
+name = "oneshot_utils"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 publish.workspace = true
 
 [dependencies]
+derive-new = { workspace = true }
+derive_more = { workspace = true }
+fmt-derive = { workspace = true }
+derive-getters = { workspace = true }

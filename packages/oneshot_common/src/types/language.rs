@@ -16,10 +16,17 @@ pub enum Language {
 }
 
 impl Language {
-    fn package(&self) -> &'static str {
+    pub fn package(self) -> &'static str {
         match self {
             Ruby => "gem",
-            _ => "package"
+            _ => "package",
+        }
+    }
+
+    pub fn todo(self) -> &'static str {
+        match self {
+            Rust => "todo!()",
+            _ => "TODO",
         }
     }
 }
