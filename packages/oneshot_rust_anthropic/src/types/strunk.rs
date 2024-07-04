@@ -1,9 +1,10 @@
+use std::io::Write;
 use std::path::PathBuf;
 
 use anyhow::ensure;
 use clap::{value_parser, Parser};
 use clust::Client;
-use fs_err::read_to_string;
+use fs_err::{read_to_string, File};
 use syn::__private::ToTokens;
 
 use clust_ext::functions::into_text::into_text;
@@ -23,8 +24,14 @@ pub struct Strunk {
     #[arg(long, short, env = "COLOR", default_value_t)]
     pub color: Color,
 
-    #[arg(long, short, env = "THEME")]
+    #[arg(long, short, env = "BAT_THEME")]
     pub theme: Option<String>,
+
+    #[arg(long, short)]
+    pub print: bool,
+
+    #[arg(long, short)]
+    pub overwrite: bool,
 
     #[arg(name = "path", value_parser = value_parser!(PathBuf))]
     path_buf: PathBuf,
@@ -36,6 +43,8 @@ impl Strunk {
             path_buf,
             color,
             theme,
+            print,
+            overwrite,
         } = self;
         let path = path_buf.as_path();
         let _cwd = env!("CARGO_MANIFEST_DIR");
@@ -57,6 +66,7 @@ impl Strunk {
         let mut file = syn::parse_file(&file_content)?;
         file.items = vec![];
         let assistant_content = file.to_token_stream().to_string();
+        let mut text = assistant_content.clone();
 
         let request_body = messages_request_body(
             role,
@@ -70,19 +80,27 @@ impl Strunk {
         // println!("{response:#?}", response = &response_body);
         let response_text = into_text(response_body);
 
-        if color.into() {
-            let language_string = language.to_string();
-            let mut printer = pretty_printer();
-            if let Some(theme) = theme {
-                printer.theme(theme);
+        text.push_str(&response_text);
+
+        if print {
+            if color.into() {
+                let language_string = language.to_string();
+                let mut printer = pretty_printer();
+                if let Some(theme) = theme {
+                    printer.theme(theme);
+                }
+                let no_errors = printer
+                    .language(language_string.as_str())
+                    .input_from_bytes(text.as_bytes())
+                    .print()?;
+                ensure!(no_errors, "Errors were encountered while pretty-printing");
+            } else {
+                println!("{text}");
             }
-            let no_errors = printer
-                .language(language_string.as_str())
-                .input_from_bytes(response_text.as_bytes())
-                .print()?;
-            ensure!(no_errors, "Errors were encountered while pretty-printing");
-        } else {
-            println!("{response_text}");
+        }
+
+        if overwrite {
+            File::create(path)?.write_all(text.as_bytes())?;
         }
 
         // let mut stream = client.create_a_message_stream(body).await?;
