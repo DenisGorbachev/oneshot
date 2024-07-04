@@ -24,3 +24,4 @@ tokio-stream = { workspace = true }
 fs-err = { workspace = true }
 oneshot_rust = { path = "../oneshot_rust" }
 strum = { workspace = true }
+prettyplease = { workspace = true }

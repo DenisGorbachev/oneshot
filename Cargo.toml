@@ -35,6 +35,7 @@ oneshot_utils = { path = "./packages/oneshot_utils" }
 fs-err = { version = "2.11.0" }
 itertools = { version = "0.13.0" }
 bat = { version = "0.24.0", default-features = false, features = ["paging", "regex-fancy"] }
+prettyplease = { version = "0.2.20" }
 
 #[profile.test.package.proptest]
 #opt-level = 3

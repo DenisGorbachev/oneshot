@@ -5,7 +5,7 @@ use anyhow::ensure;
 use clap::{value_parser, Parser};
 use clust::Client;
 use fs_err::{read_to_string, File};
-use syn::__private::ToTokens;
+use prettyplease::unparse;
 
 use clust_ext::functions::into_text::into_text;
 use clust_ext::functions::message::{assistant_message, user_message};
@@ -27,7 +27,7 @@ pub struct Strunk {
     #[arg(long, short, env = "BAT_THEME")]
     pub theme: Option<String>,
 
-    #[arg(long, short)]
+    #[arg(long, short, default_value_t = true)]
     pub print: bool,
 
     #[arg(long, short)]
@@ -65,8 +65,10 @@ impl Strunk {
         let file_content = read_to_string(path)?;
         let mut file = syn::parse_file(&file_content)?;
         file.items = vec![];
-        let assistant_content = file.to_token_stream().to_string();
-        let mut text = assistant_content.clone();
+        // TODO: optimize this trim_end() bit
+        // TODO: Maybe avoid the prefill
+        let mut text = unparse(&file).trim_end().to_string();
+        let assistant_content = text.clone();
 
         let request_body = messages_request_body(
             role,
