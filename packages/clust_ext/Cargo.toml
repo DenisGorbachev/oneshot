@@ -7,3 +7,4 @@ publish.workspace = true
 
 [dependencies]
 clust = { workspace = true }
+itertools = { workspace = true }

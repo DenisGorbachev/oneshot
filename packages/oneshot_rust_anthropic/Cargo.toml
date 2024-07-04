@@ -10,8 +10,8 @@ derive-new = { workspace = true }
 derive_more = { workspace = true }
 fmt-derive = { workspace = true }
 derive-getters = { workspace = true }
-oneshot_common = { path = "../oneshot_common", features = ["serde", "serde-xml-rs"] }
-oneshot_utils = { path = "../oneshot_utils" }
+oneshot_common = { workspace = true }
+oneshot_utils = { workspace = true }
 anyhow = { workspace = true }
 serde_json = { workspace = true }
 tokio = { workspace = true }
@@ -21,3 +21,6 @@ clust_ext = { path = "../clust_ext" }
 syn = { workspace = true }
 env_logger = { workspace = true }
 tokio-stream = { workspace = true }
+fs-err = { workspace = true }
+oneshot_rust = { path = "../oneshot_rust" }
+strum = { workspace = true }

@@ -10,8 +10,9 @@ derive-new = { workspace = true }
 derive_more = { workspace = true }
 fmt-derive = { workspace = true }
 derive-getters = { workspace = true }
-syn = { workspace = true, features = ["full"] }
+syn = { workspace = true }
 quote = { workspace = true }
-oneshot_utils = { path = "../oneshot_utils" }
 serde = { workspace = true, optional = true }
-oneshot_common = { path = "../oneshot_common" }
+oneshot_utils = { workspace = true }
+oneshot_common = { workspace = true }
+bat = { workspace = true }

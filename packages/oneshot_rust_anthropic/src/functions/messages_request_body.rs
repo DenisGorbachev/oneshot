@@ -1,9 +1,8 @@
-use clust::messages::{ClaudeModel, Message, MessagesRequestBody, StreamOption, SystemPrompt};
+use clust::messages::{ClaudeModel, Message, MessagesRequestBody, SystemPrompt};
 
 pub fn messages_request_body_default() -> MessagesRequestBody {
     MessagesRequestBody {
         model: ClaudeModel::Claude35Sonnet20240620,
-        stream: Some(StreamOption::ReturnStream),
         ..Default::default()
     }
 }

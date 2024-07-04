@@ -12,7 +12,7 @@ publish = false
 derive-new = { git = "https://github.com/OmarTawfik-forks/derive-new", branch = "impl-into" } # "0.6.0"
 derive_more = { version = "1.0.0-beta.6", features = ["full"] }
 fmt-derive = "0.1.2"
-derive_builder = "0.13.0"
+derive_builder = "0.20.0"
 derive-getters = { git = "https://git.sr.ht/~dengor/derive-getters", branch = "feature/copy-getters-for-primitive-types", features = ["auto_copy_getters"] }
 anyhow = "1.0.80"
 proptest = "1.5.0"
@@ -26,10 +26,15 @@ serde = { version = "1.0.203" }
 serde_json = "1.0.120"
 serde-xml-rs = "0.6.0"
 reqwest = "0.12.5"
-syn = "2.0.68"
+syn = { version = "2.0.68", features = ["full"] }
 quote = "1.0.36"
 env_logger = { version = "0.11.3" }
 tokio-stream = { version = "0.1.15" }
+oneshot_common = { path = "./packages/oneshot_common", features = ["serde", "serde-xml-rs"] }
+oneshot_utils = { path = "./packages/oneshot_utils" }
+fs-err = { version = "2.11.0" }
+itertools = { version = "0.13.0" }
+bat = { version = "0.24.0", default-features = false, features = ["paging", "regex-fancy"] }
 
 #[profile.test.package.proptest]
 #opt-level = 3
