@@ -7,9 +7,9 @@ use fmt_derive::Display;
 use crate::functions::find_package_root::{get_package_root, PackageRootNotFoundError};
 
 pub fn get_path_buf_relative_to_package_root(
-    input: &Path,
+    input: impl AsRef<Path>,
 ) -> Result<PathBuf, GetPathBufRelativeToPackageRootError> {
-    let absolute_input = input.canonicalize()?;
+    let absolute_input = input.as_ref().canonicalize()?;
     let package_root = get_package_root(&absolute_input)?;
     let relative_path = absolute_input.strip_prefix(package_root)?;
     Ok(relative_path.to_path_buf())

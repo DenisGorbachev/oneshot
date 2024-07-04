@@ -3,25 +3,22 @@ use std::io;
 use std::path::{Path, PathBuf};
 
 use derive_getters::{Dissolve, Getters};
-use derive_more::{Error, From};
-use fmt_derive::Display;
+use derive_new::new;
 
-use oneshot_utils::functions::get_path_buf_relative_to_package_root::{
-    get_path_buf_relative_to_package_root, GetPathBufRelativeToPackageRootError,
-};
-
-#[derive(Getters, Dissolve, Ord, PartialOrd, Eq, PartialEq, Default, Hash, Clone, Debug)]
+/// `content` is not guaranteed to come from `path_buf` because it is possible to call `SourceFile::new` with any arguments (this is intentional)
+#[derive(new, Getters, Dissolve, Ord, PartialOrd, Eq, PartialEq, Default, Hash, Clone, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct SourceFile {
-    // Relative to package root (needed for serialization)
+    #[new(into)]
     path_buf: PathBuf,
+    #[new(into)]
     content: String,
 }
 
 impl SourceFile {
-    pub fn new(path: &Path) -> Result<Self, SourceFileNewError> {
-        let path_buf = get_path_buf_relative_to_package_root(path)?;
-        let content = read_to_string(path)?;
+    pub fn from_path_buf(path_buf: impl Into<PathBuf>) -> io::Result<Self> {
+        let path_buf = path_buf.into();
+        let content = read_to_string(path_buf.as_path())?;
         Ok(Self { path_buf, content })
     }
 
@@ -31,16 +28,24 @@ impl SourceFile {
     }
 }
 
-#[derive(Error, Display, From, Debug)]
-pub enum SourceFileNewError {
-    TheIoError(io::Error),
-    TheGetPathBufRelativeToPackageRootError(GetPathBufRelativeToPackageRootError),
-}
+// #[derive(Error, Display, From, Debug)]
+// pub enum SourceFileFromPathBufError {
+//     TheIoError(io::Error),
+//     TheGetPathBufRelativeToPackageRootError(GetPathBufRelativeToPackageRootError),
+// }
 
 impl<'a> TryFrom<&'a Path> for SourceFile {
-    type Error = SourceFileNewError;
+    type Error = io::Error;
 
     fn try_from(path: &'a Path) -> Result<Self, Self::Error> {
-        Self::new(path)
+        Self::from_path_buf(path)
+    }
+}
+
+impl TryFrom<PathBuf> for SourceFile {
+    type Error = io::Error;
+
+    fn try_from(path_buf: PathBuf) -> Result<Self, Self::Error> {
+        Self::from_path_buf(path_buf)
     }
 }

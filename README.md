@@ -4,7 +4,6 @@ OneShot generates whole apps in one shot from a `README.md` and [a config](#conf
 
 **[Rationale](#rationale)** | **[Benefits](#benefits)** | **[Features](#features)** | **[How it works](#how-it-works)** | **[FAQ](#faq)**
 
-
 ## Rationale
 
 LLMs are better at writing new code rather than editing existing code. It makes sense to adopt a new workflow:
@@ -68,6 +67,7 @@ The API wrapper is a separate program that sends an API request and processes th
 At minimum, the configuration must specify the API wrapper for communicating with an LLM.
 
 An API wrapper is a binary program:
+
 * The API program accepts TOML on standard input.
 * The API program outputs the text received from the LLM to standard output.
 * The API program outputs code by writing directly into files within a specified directory.
@@ -96,7 +96,7 @@ Note that the local configuration file options override the environment variable
 We have plans for developing the following wrappers:
 
 * OpenAI API
-* [Anthropic API](./packages/oneshot_anthropic_api)
+* [Anthropic API](./packages/oneshot_rust_anthropic)
 * Ollama API (local models)
 
 ### Write your own API wrapper
@@ -118,7 +118,7 @@ Package can be published and installed via package manager.
 Notes:
 
 * A single repository may contain multiple packages.
-* Most languages use the same word ("package") to define a shareable unit of code, but some languages use different words. For example, Ruby uses the word "gem". 
+* Most languages use the same word ("package") to define a shareable unit of code, but some languages use different words. For example, Ruby uses the word "gem".
 
 ### Response
 
