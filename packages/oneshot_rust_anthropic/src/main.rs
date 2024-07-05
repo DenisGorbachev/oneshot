@@ -1,4 +1,5 @@
 use clap::Parser;
+use time::OffsetDateTime;
 
 use types::cli::Cli;
 
@@ -9,7 +10,8 @@ pub mod types;
 async fn main() -> anyhow::Result<()> {
     init_env_logger();
     init_tracing_subscriber();
-    Cli::parse().execute().await
+    let now = OffsetDateTime::now_utc();
+    Cli::parse().execute(now).await
 }
 
 fn init_env_logger() {
