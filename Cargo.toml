@@ -13,10 +13,10 @@ derive-new = { git = "https://github.com/OmarTawfik-forks/derive-new", branch = 
 derive_more = { version = "1.0.0-beta.6", features = ["full"] }
 fmt-derive = "0.1.2"
 derive_builder = "0.20.0"
-derive-getters = { git = "https://git.sr.ht/~dengor/derive-getters", branch = "feature/copy-getters-for-primitive-types", features = ["auto_copy_getters"] }
+derive-getters = { git = "https://git.sr.ht/~dengor/derive-getters", branch = "feature/auto-copy-getters", features = ["auto_copy_getters"] }
 anyhow = "1.0.80"
 proptest = "1.5.0"
-clust = "0.9.0"
+clust = { git = "https://github.com/DenisGorbachev/clust.git", branch = "main" }
 tokio = { version = "1.38.0", features = ["macros", "fs", "net", "rt", "rt-multi-thread"] }
 indoc = "2.0.5"
 lazy_static = "1.5.0"
@@ -36,6 +36,11 @@ fs-err = { version = "2.11.0" }
 itertools = { version = "0.13.0" }
 bat = { version = "0.24.0", default-features = false, features = ["paging", "regex-fancy"] }
 prettyplease = { version = "0.2.20" }
+pulldown-cmark = { version = "0.11.0" }
+throbber-widgets-tui = { version = "0.6.0" }
+ratatui = { version = "0.27.0" }
+tracing = { version = "0.1.40" }
+tracing-subscriber = { version = "0.3.18", features = ["default", "local-time", "env-filter"] }
 
 #[profile.test.package.proptest]
 #opt-level = 3

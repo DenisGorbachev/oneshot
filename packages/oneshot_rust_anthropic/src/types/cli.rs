@@ -17,10 +17,10 @@ pub struct Cli {
 }
 
 impl Cli {
-    pub async fn run(self) -> anyhow::Result<()> {
+    pub async fn execute(self) -> anyhow::Result<()> {
         let client = client(self.anthropic_api_key);
         match self.command {
-            Command::Strunk(command) => command.run(client).await,
+            Command::Run(command) => command.execute(client).await,
         }
     }
 }

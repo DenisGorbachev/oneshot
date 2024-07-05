@@ -16,3 +16,4 @@ serde = { workspace = true, optional = true }
 oneshot_utils = { workspace = true }
 oneshot_common = { workspace = true }
 bat = { workspace = true }
+pulldown-cmark = { workspace = true }

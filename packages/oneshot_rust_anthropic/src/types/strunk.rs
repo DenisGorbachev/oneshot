@@ -20,7 +20,7 @@ use crate::functions::messages_request_body::messages_request_body;
 use crate::types::color::Color;
 
 #[derive(Parser, Debug)]
-pub struct Strunk {
+pub struct Run {
     #[arg(long, short, env = "COLOR", default_value_t)]
     pub color: Color,
 
@@ -37,8 +37,8 @@ pub struct Strunk {
     path_buf: PathBuf,
 }
 
-impl Strunk {
-    pub async fn run(self, client: Client) -> anyhow::Result<()> {
+impl Run {
+    pub async fn execute(self, client: Client) -> anyhow::Result<()> {
         let Self {
             path_buf,
             color,

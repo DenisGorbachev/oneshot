@@ -7,6 +7,21 @@ pub mod types;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    env_logger::init();
-    Cli::parse().run().await
+    init_env_logger();
+    init_tracing_subscriber();
+    Cli::parse().execute().await
+}
+
+fn init_env_logger() {
+    // env_logger::init();
+}
+
+fn init_tracing_subscriber() {
+    use tracing_subscriber::util::SubscriberInitExt;
+    let subscriber = tracing_subscriber::fmt()
+        .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
+        // .with_max_level(tracing::Level::TRACE) // Set the maximum log level to TRACE
+        .finish();
+    // dbg!(&subscriber);
+    subscriber.init();
 }
