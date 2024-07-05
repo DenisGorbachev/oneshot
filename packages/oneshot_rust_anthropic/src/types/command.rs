@@ -1,8 +1,8 @@
 use clap::Subcommand;
 
-use crate::types::strunk::Run;
+use crate::types::strunk::Strunk;
 
 #[derive(Subcommand, Debug)]
 pub enum Command {
-    Run(Run),
+    Strunk(Strunk),
 }

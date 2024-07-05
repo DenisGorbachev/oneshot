@@ -3,6 +3,7 @@ use std::path::PathBuf;
 
 use anyhow::ensure;
 use clap::{value_parser, Parser};
+use clust::messages::{MessagesError, MessagesRequestBody};
 use clust::Client;
 use fs_err::{read_to_string, File};
 use prettyplease::unparse;
@@ -20,7 +21,7 @@ use crate::functions::messages_request_body::messages_request_body;
 use crate::types::color::Color;
 
 #[derive(Parser, Debug)]
-pub struct Run {
+pub struct Strunk {
     #[arg(long, short, env = "COLOR", default_value_t)]
     pub color: Color,
 
@@ -37,7 +38,7 @@ pub struct Run {
     path_buf: PathBuf,
 }
 
-impl Run {
+impl Strunk {
     pub async fn execute(self, client: Client) -> anyhow::Result<()> {
         let Self {
             path_buf,
@@ -61,28 +62,13 @@ impl Run {
         user_parts.push(format!("A {language} source file with the path `{path:?}` is provided below. Write the code according to the specification in the file."));
         let user_content = user_parts.join("\n\n");
 
+        let request_body = messages_request_body(role, vec![user_message(user_content)]);
+
         // let source_file_xml = SourceFile::new(path, file)?.serialize_to_xml()?;
         let file_content = read_to_string(path)?;
-        let mut file = syn::parse_file(&file_content)?;
-        file.items = vec![];
-        // TODO: optimize this trim_end() bit
-        // TODO: Maybe avoid the prefill
-        let mut text = unparse(&file).trim_end().to_string();
-        let assistant_content = text.clone();
+        let file = syn::parse_file(&file_content)?;
 
-        let request_body = messages_request_body(
-            role,
-            vec![
-                user_message(user_content),
-                assistant_message(assistant_content),
-            ],
-        );
-
-        let response_body = client.create_a_message(request_body).await?;
-        // println!("{response:#?}", response = &response_body);
-        let response_text = into_text(response_body);
-
-        text.push_str(&response_text);
+        let text = strunk(client, request_body, file).await?;
 
         if print {
             if color.into() {
@@ -114,4 +100,26 @@ impl Run {
 
         Ok(())
     }
+}
+
+async fn strunk(
+    client: Client,
+    mut request_body: MessagesRequestBody,
+    mut file: syn::File,
+) -> Result<String, MessagesError> {
+    file.items = vec![];
+
+    let mut text = unparse(&file).trim_end().to_string();
+    let assistant_content = text.clone();
+
+    request_body
+        .messages
+        .push(assistant_message(assistant_content));
+
+    let response_body = client.create_a_message(request_body).await?;
+    let response_text = into_text(response_body);
+
+    text.push_str(&response_text);
+
+    Ok(text)
 }
