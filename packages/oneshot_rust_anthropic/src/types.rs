@@ -5,6 +5,8 @@ pub mod client_config;
 pub mod color;
 mod command;
 pub mod noop_writer;
+mod output;
+mod output_target;
 pub mod real_conversation_writer;
 mod strunk;
 pub mod strunk_error;

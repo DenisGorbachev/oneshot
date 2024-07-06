@@ -32,3 +32,6 @@ tracing-subscriber = { workspace = true }
 serde_yaml = { workspace = true }
 time = { workspace = true }
 serialize = { path = "../serialize", features = ["clap", "serde_json", "serde_yaml"] }
+constcat = { workspace = true }
+directories = { workspace = true }
+lazy_static = { workspace = true }

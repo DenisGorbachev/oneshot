@@ -1,6 +1,6 @@
-#[derive(
-    Ord, PartialOrd, Eq, PartialEq, Hash, Clone, Copy, Debug, serde::Serialize, serde::Deserialize,
-)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, Ord, PartialOrd, Eq, PartialEq, Hash, Clone, Copy, Debug)]
 #[cfg_attr(feature = "clap", derive(clap::ValueEnum))]
 #[cfg_attr(feature = "strum", derive(strum::Display))]
 #[non_exhaustive]

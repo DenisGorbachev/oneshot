@@ -44,6 +44,9 @@ tracing-subscriber = { version = "0.3.18", features = ["default", "local-time", 
 serde_yaml = { version = "0.9.34" }
 time = { version = "0.3.36", features = ["macros", "formatting"] }
 thiserror = { version = "1.0.61" }
+constcat = { version = "0.5.0" }
+homedir = { version = "0.3.3" }
+directories = { version = "5.0.1" }
 
 #[profile.test.package.proptest]
 #opt-level = 3

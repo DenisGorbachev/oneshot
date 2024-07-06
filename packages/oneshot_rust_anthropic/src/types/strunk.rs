@@ -1,10 +1,11 @@
 use std::io::Write;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 use anyhow::ensure;
 use clap::{value_parser, Parser};
 use clust::messages::MessagesRequestBody;
 use clust::Client;
+use constcat::concat;
 use fs_err::{read_to_string, File};
 use prettyplease::unparse;
 
@@ -16,11 +17,11 @@ use oneshot_common::functions::readme::readme;
 use oneshot_common::functions::role::role;
 use oneshot_common::types::language::Language;
 use oneshot_utils::functions::find_package_root::get_package_root;
-use serialize::format::Format;
 use serialize::functions::serialize_to_file::serialize_to_file;
 
 use crate::functions::messages_request_body::messages_request_body;
 use crate::types::color::Color;
+use crate::types::output::Output;
 use crate::types::strunk_error::StrunkError;
 
 #[derive(Parser, Debug)]
@@ -42,15 +43,6 @@ pub struct Strunk {
 
     #[arg(name = "path", value_parser = value_parser!(PathBuf))]
     pub path_buf: PathBuf,
-}
-
-#[derive(Parser, Debug)]
-pub struct Output {
-    #[arg(name = "output-dir", long, value_parser = value_parser!(PathBuf))]
-    pub dir: PathBuf,
-
-    #[arg(name = "output-format", long, value_enum, default_value_t = Format::Yaml)]
-    pub format: Format,
 }
 
 impl Strunk {
@@ -84,14 +76,7 @@ impl Strunk {
         let file_content = read_to_string(path)?;
         let file = syn::parse_file(&file_content)?;
 
-        let text = strunk(
-            client,
-            output.dir.as_path(),
-            output.format,
-            request_body,
-            file,
-        )
-        .await?;
+        let text = strunk(client, &output, package_root, request_body, file).await?;
 
         if print {
             if color.into() {
@@ -127,8 +112,8 @@ impl Strunk {
 
 async fn strunk(
     client: Client,
-    output_dir: &Path,
-    output_format: Format,
+    output: &Output,
+    package_root: impl Into<PathBuf>,
     mut request_body: MessagesRequestBody,
     mut file: syn::File,
 ) -> Result<String, StrunkError> {
@@ -136,14 +121,31 @@ async fn strunk(
 
     let mut text = unparse(&file).trim_end().to_string();
     let assistant_content = text.clone();
+    let output_dir_opt = output.dir(package_root);
 
     request_body
         .messages
         .push(assistant_message(assistant_content));
-    serialize_to_file(&request_body, output_dir, "request", output_format)?;
+
+    if let Some(output_dir) = output_dir_opt.as_ref() {
+        serialize_to_file(
+            &request_body,
+            output_dir.as_path(),
+            "request",
+            output.format,
+        )?;
+    }
 
     let response_body = client.create_a_message(request_body).await?;
-    serialize_to_file(&response_body, output_dir, "response", output_format)?;
+
+    if let Some(output_dir) = output_dir_opt.as_ref() {
+        serialize_to_file(
+            &response_body,
+            output_dir.as_path(),
+            "response",
+            output.format,
+        )?;
+    }
 
     let response_text = into_text(response_body);
 
