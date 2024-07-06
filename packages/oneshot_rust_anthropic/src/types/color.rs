@@ -6,7 +6,6 @@ use strum::Display;
 use Color::*;
 
 #[derive(ValueEnum, Display, Default, Debug, Clone, Copy)]
-#[strum(serialize_all = "kebab-case")] // needed for correct roundtrip with ValueEnum
 pub enum Color {
     #[default]
     Auto,

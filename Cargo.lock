@@ -1217,6 +1217,7 @@ dependencies = [
  "ratatui",
  "serde_json",
  "serde_yaml",
+ "serialize",
  "strum",
  "syn 2.0.68",
  "throbber-widgets-tui",
@@ -1235,6 +1236,7 @@ dependencies = [
  "derive-new",
  "derive_more",
  "fmt-derive",
+ "strum",
 ]
 
 [[package]]
@@ -1445,6 +1447,10 @@ checksum = "5e719e8df665df0d1c8fbfd238015744736151d4445ec0836b8e628aae103b77"
 dependencies = [
  "unicode-ident",
 ]
+
+[[package]]
+name = "pseudorust"
+version = "0.1.0"
 
 [[package]]
 name = "pulldown-cmark"
@@ -1857,6 +1863,20 @@ dependencies = [
  "ryu",
  "serde",
  "unsafe-libyaml",
+]
+
+[[package]]
+name = "serialize"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "derive_more",
+ "serde",
+ "serde-xml-rs",
+ "serde_json",
+ "serde_yaml",
+ "strum",
+ "thiserror",
 ]
 
 [[package]]

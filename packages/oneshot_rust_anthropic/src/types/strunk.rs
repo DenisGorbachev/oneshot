@@ -1,9 +1,9 @@
 use std::io::Write;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use anyhow::ensure;
 use clap::{value_parser, Parser};
-use clust::messages::{MessagesError, MessagesRequestBody};
+use clust::messages::MessagesRequestBody;
 use clust::Client;
 use fs_err::{read_to_string, File};
 use prettyplease::unparse;
@@ -16,13 +16,16 @@ use oneshot_common::functions::readme::readme;
 use oneshot_common::functions::role::role;
 use oneshot_common::types::language::Language;
 use oneshot_utils::functions::find_package_root::get_package_root;
+use serialize::format::Format;
+use serialize::functions::serialize_to_file::serialize_to_file;
 
 use crate::functions::messages_request_body::messages_request_body;
 use crate::types::color::Color;
+use crate::types::strunk_error::StrunkError;
 
 #[derive(Parser, Debug)]
 pub struct Strunk {
-    #[arg(long, short, env = "COLOR", default_value_t)]
+    #[arg(long, short, env = "COLOR", value_enum, default_value_t)]
     pub color: Color,
 
     #[arg(long, short, env = "BAT_THEME")]
@@ -34,8 +37,20 @@ pub struct Strunk {
     #[arg(long, short)]
     pub overwrite: bool,
 
+    #[clap(flatten)]
+    pub output: Output,
+
     #[arg(name = "path", value_parser = value_parser!(PathBuf))]
-    path_buf: PathBuf,
+    pub path_buf: PathBuf,
+}
+
+#[derive(Parser, Debug)]
+pub struct Output {
+    #[arg(name = "output-dir", long, value_parser = value_parser!(PathBuf))]
+    pub dir: PathBuf,
+
+    #[arg(name = "output-format", long, value_enum, default_value_t = Format::Yaml)]
+    pub format: Format,
 }
 
 impl Strunk {
@@ -44,6 +59,7 @@ impl Strunk {
             path_buf,
             color,
             theme,
+            output,
             print,
             overwrite,
         } = self;
@@ -68,7 +84,14 @@ impl Strunk {
         let file_content = read_to_string(path)?;
         let file = syn::parse_file(&file_content)?;
 
-        let text = strunk(client, request_body, file).await?;
+        let text = strunk(
+            client,
+            output.dir.as_path(),
+            output.format,
+            request_body,
+            file,
+        )
+        .await?;
 
         if print {
             if color.into() {
@@ -104,9 +127,11 @@ impl Strunk {
 
 async fn strunk(
     client: Client,
+    output_dir: &Path,
+    output_format: Format,
     mut request_body: MessagesRequestBody,
     mut file: syn::File,
-) -> Result<String, MessagesError> {
+) -> Result<String, StrunkError> {
     file.items = vec![];
 
     let mut text = unparse(&file).trim_end().to_string();
@@ -115,8 +140,11 @@ async fn strunk(
     request_body
         .messages
         .push(assistant_message(assistant_content));
+    serialize_to_file(&request_body, output_dir, "request", output_format)?;
 
     let response_body = client.create_a_message(request_body).await?;
+    serialize_to_file(&response_body, output_dir, "response", output_format)?;
+
     let response_text = into_text(response_body);
 
     text.push_str(&response_text);

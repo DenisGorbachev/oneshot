@@ -7,3 +7,4 @@ mod command;
 pub mod noop_writer;
 pub mod real_conversation_writer;
 mod strunk;
+pub mod strunk_error;
