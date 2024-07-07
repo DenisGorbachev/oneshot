@@ -324,7 +324,7 @@ dependencies = [
 [[package]]
 name = "clust"
 version = "0.9.0"
-source = "git+https://github.com/DenisGorbachev/clust.git?branch=main#815e0928849c1455909520fad032b0aa4cf161ee"
+source = "git+https://github.com/DenisGorbachev/clust.git?branch=dev#ad1f2f846bbfe0a8c58389758e4a370645e808fd"
 dependencies = [
  "bytes",
  "futures-core",

@@ -16,7 +16,7 @@ derive_builder = "0.20.0"
 derive-getters = { git = "https://git.sr.ht/~dengor/derive-getters", branch = "feature/auto-copy-getters", features = ["auto_copy_getters"] }
 anyhow = "1.0.80"
 proptest = "1.5.0"
-clust = { git = "https://github.com/DenisGorbachev/clust.git", branch = "main" }
+clust = { git = "https://github.com/DenisGorbachev/clust.git", branch = "dev", features = ["hash"] }
 tokio = { version = "1.38.0", features = ["macros", "fs", "net", "rt", "rt-multi-thread"] }
 indoc = "2.0.5"
 lazy_static = "1.5.0"

@@ -12,8 +12,10 @@ use crate::types::output_target::OutputTarget;
 pub struct Output {
     #[arg(
         name = "output-target",
+        help = "This option is overridden by the --output-dir option",
         long,
-        help = "This option is overridden by the --output-dir option"
+        value_enum,
+        default_value_t
     )]
     pub target: OutputTarget,
 
@@ -29,10 +31,10 @@ impl Output {
         match &self.dir {
             None => match &self.target {
                 OutputTarget::None => None,
-                OutputTarget::Package => Some(package_root.into()),
+                OutputTarget::Package => Some(package_root.into().join(PROJECT_SUBDIR)),
                 OutputTarget::Home => PROJECT_DIRS
                     .clone()
-                    .map(|dirs| dirs.data_local_dir().join(PROJECT_SUBDIR)),
+                    .map(|dirs| dirs.data_local_dir().to_path_buf()),
             }
             .map(|dir| dir.join(CONVERSATIONS_SUBDIR)),
             Some(path_buf) => Some(path_buf.to_owned()),

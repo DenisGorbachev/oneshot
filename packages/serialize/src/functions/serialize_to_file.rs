@@ -19,6 +19,7 @@ pub fn serialize_to_file<T: Serialize>(
     let mut file = File::create(file_path)?;
     let output = serialize::serialize(value, format)?;
     file.write_all(output.as_bytes())?;
+    file.flush()?;
     Ok(())
 }
 

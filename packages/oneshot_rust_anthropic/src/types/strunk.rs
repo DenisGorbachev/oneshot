@@ -1,3 +1,4 @@
+use std::hash::DefaultHasher;
 use std::io::Write;
 use std::path::PathBuf;
 
@@ -6,8 +7,9 @@ use clap::{value_parser, Parser};
 use clust::messages::MessagesRequestBody;
 use clust::Client;
 use constcat::concat;
-use fs_err::{read_to_string, File};
+use fs_err::{create_dir_all, read_to_string, File};
 use prettyplease::unparse;
+use time::OffsetDateTime;
 
 use clust_ext::functions::into_text::into_text;
 use clust_ext::functions::message::{assistant_message, user_message};
@@ -17,8 +19,10 @@ use oneshot_common::functions::readme::readme;
 use oneshot_common::functions::role::role;
 use oneshot_common::types::language::Language;
 use oneshot_utils::functions::find_package_root::get_package_root;
-use serialize::functions::serialize_to_file::serialize_to_file;
+use oneshot_utils::functions::hash::hash;
+use serialize::functions::serialize_to_file::{serialize_to_file, SerializeToFileError};
 
+use crate::functions::get_real_conversation_writer_from_dir_and_time::conversation_dir_if_not_exists;
 use crate::functions::messages_request_body::messages_request_body;
 use crate::types::color::Color;
 use crate::types::output::Output;
@@ -46,7 +50,7 @@ pub struct Strunk {
 }
 
 impl Strunk {
-    pub async fn execute(self, client: Client) -> anyhow::Result<()> {
+    pub async fn execute(self, client: Client, now: OffsetDateTime) -> anyhow::Result<()> {
         let Self {
             path_buf,
             color,
@@ -76,7 +80,7 @@ impl Strunk {
         let file_content = read_to_string(path)?;
         let file = syn::parse_file(&file_content)?;
 
-        let text = strunk(client, &output, package_root, request_body, file).await?;
+        let text = strunk(client, now, &output, package_root, request_body, file).await?;
 
         if print {
             if color.into() {
@@ -112,6 +116,7 @@ impl Strunk {
 
 async fn strunk(
     client: Client,
+    now: OffsetDateTime,
     output: &Output,
     package_root: impl Into<PathBuf>,
     mut request_body: MessagesRequestBody,
@@ -121,13 +126,19 @@ async fn strunk(
 
     let mut text = unparse(&file).trim_end().to_string();
     let assistant_content = text.clone();
-    let output_dir_opt = output.dir(package_root);
-
     request_body
         .messages
         .push(assistant_message(assistant_content));
 
+    let messages_hash = hash::<DefaultHasher>(&request_body.messages);
+
+    let output_dir_opt = output
+        .dir(package_root)
+        .map(|output_dir| conversation_dir_if_not_exists(output_dir, now, messages_hash))
+        .transpose()?;
+
     if let Some(output_dir) = output_dir_opt.as_ref() {
+        create_dir_all(output_dir).map_err(SerializeToFileError::from)?;
         serialize_to_file(
             &request_body,
             output_dir.as_path(),
