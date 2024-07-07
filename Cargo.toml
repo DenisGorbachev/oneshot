@@ -48,6 +48,7 @@ constcat = { version = "0.5.0" }
 homedir = { version = "0.3.3" }
 directories = { version = "5.0.1" }
 num-traits = { version = "0.2.19" }
+tap = { version = "1.0.1" }
 
 #[profile.test.package.proptest]
 #opt-level = 3

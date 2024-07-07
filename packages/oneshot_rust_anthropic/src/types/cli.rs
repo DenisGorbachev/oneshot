@@ -25,7 +25,8 @@ impl Cli {
         //     .map(|cd| get_real_conversation_writer_from_dir_and_time(cd, now))
         //     .transpose()?;
         match self.command {
-            Command::Strunk(command) => command.execute(client, now).await,
+            Command::Strunk(strunk) => strunk.execute(client, now).await,
+            Command::Run(run) => run.execute(client, now).await,
         }
     }
 }

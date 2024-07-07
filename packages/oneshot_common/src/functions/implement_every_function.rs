@@ -1,6 +1,6 @@
 use crate::types::language::Language;
 
-pub fn implement_every_function(language: Language) -> String {
+pub fn implement_every_function_instruction(language: Language) -> String {
     implement_every_function_raw(language.todo())
 }
 

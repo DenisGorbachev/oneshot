@@ -35,3 +35,5 @@ serialize = { path = "../serialize", features = ["clap", "serde_json", "serde_ya
 constcat = { workspace = true }
 directories = { workspace = true }
 lazy_static = { workspace = true }
+tap = { workspace = true }
+bat = { workspace = true }

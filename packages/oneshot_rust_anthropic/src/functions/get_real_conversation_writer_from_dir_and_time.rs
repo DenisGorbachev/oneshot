@@ -2,6 +2,7 @@ use std::io;
 use std::io::ErrorKind;
 use std::path::{Path, PathBuf};
 
+use fs_err::create_dir_all;
 use time::macros::format_description;
 use time::OffsetDateTime;
 
@@ -28,20 +29,24 @@ pub fn conversation_dir(
     Ok(dir)
 }
 
-pub fn conversation_dir_if_not_exists(
+pub fn acquire_conversation_dir(
     parent: impl AsRef<Path>,
     time: OffsetDateTime,
     id: u64,
 ) -> Result<PathBuf, ConversationDirIfNotExistsError> {
     let dir = conversation_dir(parent, time, id)?;
-    if dir.exists() {
+    acquire_dir(dir.as_path())?;
+    Ok(dir)
+}
+
+fn acquire_dir(dir: impl AsRef<Path>) -> io::Result<()> {
+    if dir.as_ref().exists() {
         Err(io::Error::new(
             ErrorKind::AlreadyExists,
             "Conversation directory already exists",
-        )
-        .into())
+        ))
     } else {
-        Ok(dir)
+        create_dir_all(dir)
     }
 }
 

@@ -1,4 +1,4 @@
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use derive_more::Error;
 use derive_new::new;
@@ -9,6 +9,10 @@ use crate::functions::find_parent_containing_filename::find_parent_containing_fi
 
 pub fn find_package_root(start: &Path) -> Option<&Path> {
     find_parent_containing_filename(start, CARGO_TOML_FILE_NAME)
+}
+
+pub fn find_package_root_buf(start: &Path) -> Option<PathBuf> {
+    find_package_root(start).map(PathBuf::from)
 }
 
 pub fn get_package_root(start: &Path) -> Result<&Path, PackageRootNotFoundError> {
