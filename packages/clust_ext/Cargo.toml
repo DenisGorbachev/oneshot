@@ -8,3 +8,5 @@ publish.workspace = true
 [dependencies]
 clust = { workspace = true }
 itertools = { workspace = true }
+derive_more = { workspace = true }
+derive-new = { workspace = true }

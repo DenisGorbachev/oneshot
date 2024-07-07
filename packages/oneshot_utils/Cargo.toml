@@ -11,3 +11,4 @@ derive_more = { workspace = true }
 fmt-derive = { workspace = true }
 derive-getters = { workspace = true }
 strum = { workspace = true }
+num-traits = { workspace = true }

@@ -1,26 +1,26 @@
-use std::hash::DefaultHasher;
-use std::io::Write;
-use std::path::PathBuf;
+use std::io;
+use std::path::{Path, PathBuf};
 
 use anyhow::ensure;
 use clap::{value_parser, Parser};
 use clust::messages::MessagesRequestBody;
 use clust::Client;
 use constcat::concat;
-use fs_err::{create_dir_all, read_to_string, File};
+use fs_err::{create_dir_all, read_to_string, write};
 use prettyplease::unparse;
 use time::OffsetDateTime;
 
-use clust_ext::functions::into_text::into_text;
+use clust_ext::functions::into_response_text::into_response_text;
 use clust_ext::functions::message::{assistant_message, user_message};
+use clust_ext::types::markdown_text::MarkdownText;
 use oneshot_common::functions::intro::intro;
 use oneshot_common::functions::pretty_printer::pretty_printer;
 use oneshot_common::functions::readme::readme;
 use oneshot_common::functions::role::role;
 use oneshot_common::types::language::Language;
 use oneshot_utils::functions::find_package_root::get_package_root;
-use oneshot_utils::functions::hash::hash;
-use serialize::functions::serialize_to_file::{serialize_to_file, SerializeToFileError};
+use oneshot_utils::types::counter::Counter;
+use serialize::functions::serialize_to_file::serialize_to_file;
 
 use crate::functions::get_real_conversation_writer_from_dir_and_time::conversation_dir_if_not_exists;
 use crate::functions::messages_request_body::messages_request_body;
@@ -80,7 +80,17 @@ impl Strunk {
         let file_content = read_to_string(path)?;
         let file = syn::parse_file(&file_content)?;
 
-        let text = strunk(client, now, &output, package_root, request_body, file).await?;
+        let mut request_counter = Counter::<u64>::default();
+        let text = strunk(
+            client,
+            now,
+            &output,
+            package_root,
+            request_body,
+            file,
+            &mut request_counter,
+        )
+        .await?;
 
         if print {
             if color.into() {
@@ -100,7 +110,7 @@ impl Strunk {
         }
 
         if overwrite {
-            File::create(path)?.write_all(text.as_bytes())?;
+            write(path, text)?;
         }
 
         // let mut stream = client.create_a_message_stream(body).await?;
@@ -121,6 +131,7 @@ async fn strunk(
     package_root: impl Into<PathBuf>,
     mut request_body: MessagesRequestBody,
     mut file: syn::File,
+    request_counter: &mut Counter<u64>,
 ) -> Result<String, StrunkError> {
     file.items = vec![];
 
@@ -130,20 +141,18 @@ async fn strunk(
         .messages
         .push(assistant_message(assistant_content));
 
-    let messages_hash = hash::<DefaultHasher>(&request_body.messages);
-
     let output_dir_opt = output
         .dir(package_root)
-        .map(|output_dir| conversation_dir_if_not_exists(output_dir, now, messages_hash))
+        .map(|output_dir| conversation_dir_if_not_exists(output_dir, now, request_counter.take()))
         .transpose()?;
 
     if let Some(output_dir) = output_dir_opt.as_ref() {
-        create_dir_all(output_dir).map_err(SerializeToFileError::from)?;
-        serialize_to_file(
-            &request_body,
-            output_dir.as_path(),
-            "request",
-            output.format,
+        create_dir_all(output_dir)?;
+        serialize_to_file(&request_body, output_dir, "request", output.format)?;
+        write_message(
+            output_dir,
+            "request.md",
+            MarkdownText::from(&request_body).as_str(),
         )?;
     }
 
@@ -156,11 +165,36 @@ async fn strunk(
             "response",
             output.format,
         )?;
+        write_message(
+            output_dir,
+            "response.md",
+            MarkdownText::from(&response_body).as_str(),
+        )?;
     }
 
-    let response_text = into_text(response_body);
+    let response_text = into_response_text(response_body);
 
     text.push_str(&response_text);
 
     Ok(text)
+}
+
+#[allow(dead_code)]
+pub fn write_message_by_id_role(
+    dir: impl AsRef<Path>,
+    id: u64,
+    role: &str,
+    contents: impl AsRef<[u8]>,
+) -> io::Result<()> {
+    let filename = format!("{id}-{role}.md");
+    write_message(dir, filename, contents)
+}
+
+pub fn write_message(
+    dir: impl AsRef<Path>,
+    filename: impl AsRef<Path>,
+    contents: impl AsRef<[u8]>,
+) -> io::Result<()> {
+    let path_buf = dir.as_ref().join(filename);
+    write(path_buf, contents)
 }

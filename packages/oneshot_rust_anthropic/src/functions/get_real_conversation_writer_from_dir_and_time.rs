@@ -21,19 +21,19 @@ pub fn get_real_conversation_writer_from_dir_and_time(
 pub fn conversation_dir(
     parent: impl AsRef<Path>,
     time: OffsetDateTime,
-    hash: u64,
+    id: u64,
 ) -> Result<PathBuf, time::error::Format> {
     let time_formatted = format_time_for_dirname(time)?;
-    let dir = parent.as_ref().join(format!("{time_formatted}-{hash}"));
+    let dir = parent.as_ref().join(format!("{time_formatted}-{id}"));
     Ok(dir)
 }
 
 pub fn conversation_dir_if_not_exists(
     parent: impl AsRef<Path>,
     time: OffsetDateTime,
-    hash: u64,
+    id: u64,
 ) -> Result<PathBuf, ConversationDirIfNotExistsError> {
-    let dir = conversation_dir(parent, time, hash)?;
+    let dir = conversation_dir(parent, time, id)?;
     if dir.exists() {
         Err(io::Error::new(
             ErrorKind::AlreadyExists,
