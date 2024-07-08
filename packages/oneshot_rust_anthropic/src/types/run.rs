@@ -1,3 +1,4 @@
+use std::iter::once;
 use std::path::PathBuf;
 
 use clap::{value_parser, Parser};
@@ -7,7 +8,7 @@ use time::OffsetDateTime;
 
 use clust_ext::functions::message::user_message;
 use oneshot_common::functions::default_user_content::default_user_content_vec;
-use oneshot_common::functions::get_parts_from_maybe_strings::collect_maybe_strings;
+use oneshot_common::functions::get_parts_from_maybe_strings::join_message_parts;
 use oneshot_common::functions::role_from_language_maybe::role_from_language_maybe;
 use oneshot_common::types::language::Language;
 use oneshot_common::types::source_file::SourceFile;
@@ -18,6 +19,7 @@ use oneshot_utils::types::counter::Counter;
 use crate::functions::acquire_conversation_dir_from_options::acquire_conversation_dir_from_options;
 use crate::functions::create_a_message_with_output::create_a_message_with_output;
 use crate::functions::messages_request_body::messages_request_body;
+use crate::specs::to_related_files_spec::to_related_files_from_content;
 use crate::types::output_options::OutputOptions;
 use crate::types::print_options::PrintOptions;
 
@@ -29,6 +31,9 @@ pub struct Run {
     #[clap(flatten)]
     pub output_options: OutputOptions,
 
+    #[arg(name = "extra_file", value_parser = value_parser!(PathBuf))]
+    pub extra_file_path_bufs: Vec<PathBuf>,
+
     #[arg(name = "path", value_parser = value_parser!(PathBuf))]
     pub file_path_buf: PathBuf,
 }
@@ -37,9 +42,10 @@ impl Run {
     #[allow(unused_variables)]
     pub async fn execute(self, client: Client, now: OffsetDateTime) -> anyhow::Result<()> {
         let Self {
-            file_path_buf,
             output_options,
             print_options,
+            extra_file_path_bufs,
+            file_path_buf,
         } = self;
         let file_path = file_path_buf.as_path();
         let package_root_opt = find_package_root(file_path)?;
@@ -49,15 +55,22 @@ impl Run {
         let language_opt = Language::maybe_from(file_path);
         let role = role_from_language_maybe(language_opt);
         let file_content = read_to_string(file_path)?;
-        // let related_source_files = get_related_files(file_path, &file_content)?;
+        let related_source_files = to_related_files_from_content(file_path, &file_content)?;
+        let related_source_files_xml = SourceFile::to_xml_many(related_source_files.as_slice())?;
+        let extra_source_files = SourceFile::from_path_bufs(extra_file_path_bufs)?;
+        let extra_source_files_xml = SourceFile::to_xml_many(extra_source_files.as_slice())?;
         let source_file = SourceFile::new(file_path_buf.clone(), file_content);
         let output_dir_opt = output_options.dir(package_root_path_opt);
         let format = output_options.format;
         let mut request_counter = Counter::<u64>::default();
 
-        let mut user_content_parts = default_user_content_vec(file_path, language_opt, package_root_path_opt, workspace_root_path_opt)?;
-        user_content_parts.push(Some(source_file.serialize_to_xml()?));
-        let user_content = collect_maybe_strings(user_content_parts);
+        let user_content_parts = default_user_content_vec(file_path, language_opt, package_root_path_opt, workspace_root_path_opt)?
+            .into_iter()
+            .flatten()
+            .chain(related_source_files_xml)
+            .chain(extra_source_files_xml)
+            .chain(once(source_file.to_xml()?));
+        let user_content = join_message_parts(user_content_parts);
 
         let request_body = messages_request_body(role, vec![user_message(user_content)]);
 

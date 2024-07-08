@@ -25,9 +25,17 @@ impl SourceFile {
         })
     }
 
+    pub fn from_path_bufs<P: Into<PathBuf>>(path_bufs: impl IntoIterator<Item = P>) -> io::Result<Vec<Self>> {
+        path_bufs.into_iter().map(Self::from_path_buf).collect()
+    }
+
     #[cfg(all(feature = "serde", feature = "serde-xml-rs"))]
-    pub fn serialize_to_xml(&self) -> Result<String, serde_xml_rs::Error> {
+    pub fn to_xml(&self) -> Result<String, serde_xml_rs::Error> {
         serde_xml_rs::to_string(self)
+    }
+
+    pub fn to_xml_many<'a>(files: impl IntoIterator<Item = &'a Self>) -> Result<Vec<String>, serde_xml_rs::Error> {
+        files.into_iter().map(Self::to_xml).collect()
     }
 }
 

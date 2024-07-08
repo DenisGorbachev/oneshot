@@ -10,8 +10,9 @@ use crate::functions::serialize;
 use crate::functions::serialize::SerializeError;
 
 pub fn serialize_to_file<T: Serialize>(value: &T, file_dir: &Path, file_stem: &str, format: Format) -> Result<(), SerializeToFileError> {
-    let file_path = file_dir.join(format.get_file_name(file_stem));
-    let mut file = File::create(file_path)?;
+    let path_buf = file_dir.join(format.get_file_name(file_stem));
+    println!("Writing {path:?}", path = path_buf.as_path());
+    let mut file = File::create(path_buf)?;
     let output = serialize::serialize(value, format)?;
     file.write_all(output.as_bytes())?;
     file.flush()?;

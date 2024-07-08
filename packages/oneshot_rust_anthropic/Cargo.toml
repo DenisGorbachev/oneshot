@@ -37,3 +37,5 @@ directories = { workspace = true }
 lazy_static = { workspace = true }
 tap = { workspace = true }
 bat = { workspace = true }
+fierce_nerds_node = { path = "../../../zenbox/fierce_nerds_node" }
+quote = { workspace = true }

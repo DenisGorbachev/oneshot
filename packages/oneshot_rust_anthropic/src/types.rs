@@ -6,6 +6,7 @@ pub mod color;
 pub mod command;
 pub mod conversation_dir_if_not_exists_error;
 pub mod file_info;
+pub mod file_item;
 pub mod noop_writer;
 pub mod output_options;
 pub mod output_target;
