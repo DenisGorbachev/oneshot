@@ -1,13 +1,9 @@
-use clust::messages::{
-    Content, ContentBlock, Message, MessagesRequestBody, MessagesResponseBody, TextContentBlock,
-};
+use clust::messages::{Content, ContentBlock, Message, MessagesRequestBody, MessagesResponseBody, TextContentBlock};
 use derive_more::{Deref, DerefMut, Display, From, Into};
 use derive_new::new;
 use itertools::Itertools;
 
-#[derive(
-    new, Deref, DerefMut, Into, Display, Ord, PartialOrd, Eq, PartialEq, Hash, Clone, Debug,
-)]
+#[derive(new, Deref, DerefMut, Into, Display, Ord, PartialOrd, Eq, PartialEq, Hash, Clone, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "serde", serde(transparent))]
 #[repr(transparent)]

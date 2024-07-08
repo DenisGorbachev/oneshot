@@ -2,11 +2,7 @@ use std::path::Path;
 
 use crate::types::language::Language;
 
-pub fn push_implement_file_instruction(
-    parts: &mut Vec<String>,
-    language_opt: Option<Language>,
-    path: &Path,
-) {
+pub fn push_implement_file_instruction(parts: &mut Vec<String>, language_opt: Option<Language>, path: &Path) {
     parts.push(implement_file_instruction(language_opt, path))
 }
 

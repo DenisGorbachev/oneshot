@@ -21,15 +21,9 @@ where
 pub trait ConversationWriter {
     type Error;
 
-    fn write_request_body(
-        &mut self,
-        messages_request_body: &MessagesRequestBody,
-    ) -> Result<(), Self::Error>;
+    fn write_request_body(&mut self, messages_request_body: &MessagesRequestBody) -> Result<(), Self::Error>;
 
-    fn write_response_body(
-        &mut self,
-        messages_response_body: &MessagesResponseBody,
-    ) -> Result<(), Self::Error>;
+    fn write_response_body(&mut self, messages_response_body: &MessagesResponseBody) -> Result<(), Self::Error>;
 }
 
 impl<Writer, ConversationWriterError> Client<Writer>
@@ -37,10 +31,7 @@ where
     Writer: ConversationWriter<Error = ConversationWriterError>,
     ConversationWriterError: Error + 'static,
 {
-    pub async fn create_a_message(
-        &mut self,
-        request_body: MessagesRequestBody,
-    ) -> Result<MessagesResponseBody, CreateMessageError> {
+    pub async fn create_a_message(&mut self, request_body: MessagesRequestBody) -> Result<MessagesResponseBody, CreateMessageError> {
         self.writer
             .write_request_body(&request_body)
             .map_err(|err| CreateMessageError::TheBoxDynError(Box::new(err)))?;

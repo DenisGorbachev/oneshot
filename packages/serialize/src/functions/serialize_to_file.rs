@@ -9,12 +9,7 @@ use crate::format::Format;
 use crate::functions::serialize;
 use crate::functions::serialize::SerializeError;
 
-pub fn serialize_to_file<T: Serialize>(
-    value: &T,
-    file_dir: &Path,
-    file_stem: &str,
-    format: Format,
-) -> Result<(), SerializeToFileError> {
+pub fn serialize_to_file<T: Serialize>(value: &T, file_dir: &Path, file_stem: &str, format: Format) -> Result<(), SerializeToFileError> {
     let file_path = file_dir.join(format.get_file_name(file_stem));
     let mut file = File::create(file_path)?;
     let output = serialize::serialize(value, format)?;

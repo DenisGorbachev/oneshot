@@ -81,10 +81,7 @@ mod tests {
     #[test]
     fn must_roundtrip_from_extension_with_to_extension() {
         for lang in Language::iter() {
-            assert_eq!(
-                Some(lang),
-                Language::from_extension(&Language::to_extension(lang))
-            )
+            assert_eq!(Some(lang), Language::from_extension(&Language::to_extension(lang)))
         }
     }
 }

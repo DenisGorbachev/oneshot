@@ -13,17 +13,11 @@ impl NoopConversationWriter {}
 impl ConversationWriter for NoopConversationWriter {
     type Error = ();
 
-    fn write_request_body(
-        &mut self,
-        _messages_request_body: &MessagesRequestBody,
-    ) -> Result<(), Self::Error> {
+    fn write_request_body(&mut self, _messages_request_body: &MessagesRequestBody) -> Result<(), Self::Error> {
         Ok(())
     }
 
-    fn write_response_body(
-        &mut self,
-        _messages_response_body: &MessagesResponseBody,
-    ) -> Result<(), Self::Error> {
+    fn write_response_body(&mut self, _messages_response_body: &MessagesResponseBody) -> Result<(), Self::Error> {
         Ok(())
     }
 }

@@ -31,20 +31,14 @@ impl TryFrom<PathBuf> for RealConversationWriter {
 impl ConversationWriter for RealConversationWriter {
     type Error = RealConversationWriterWriteError;
 
-    fn write_request_body(
-        &mut self,
-        messages_request_body: &MessagesRequestBody,
-    ) -> Result<(), Self::Error> {
+    fn write_request_body(&mut self, messages_request_body: &MessagesRequestBody) -> Result<(), Self::Error> {
         let yaml = serde_yaml::to_string(&vec![messages_request_body])?;
         self.file.write_all(yaml.as_bytes())?;
         self.file.flush()?;
         Ok(())
     }
 
-    fn write_response_body(
-        &mut self,
-        messages_response_body: &MessagesResponseBody,
-    ) -> Result<(), Self::Error> {
+    fn write_response_body(&mut self, messages_response_body: &MessagesResponseBody) -> Result<(), Self::Error> {
         let yaml = serde_yaml::to_string(&vec![messages_response_body])?;
         self.file.write_all(yaml.as_bytes())?;
         self.file.flush()?;

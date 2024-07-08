@@ -7,10 +7,7 @@ pub fn messages_request_body_default() -> MessagesRequestBody {
     }
 }
 
-pub fn messages_request_body(
-    system: impl Into<SystemPrompt>,
-    messages: Vec<Message>,
-) -> MessagesRequestBody {
+pub fn messages_request_body(system: impl Into<SystemPrompt>, messages: Vec<Message>) -> MessagesRequestBody {
     MessagesRequestBody {
         system: Some(system.into()),
         messages,

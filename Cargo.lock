@@ -1290,6 +1290,7 @@ dependencies = [
  "derive-new",
  "derive_more",
  "fmt-derive",
+ "fs-err",
  "num-traits",
  "strum",
 ]

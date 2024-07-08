@@ -3,10 +3,7 @@ use serde::Serialize;
 
 use crate::format::Format;
 
-pub fn serialize<T: Serialize>(
-    #[allow(unused_variables)] value: &T,
-    format: Format,
-) -> Result<String, SerializeError> {
+pub fn serialize<T: Serialize>(#[allow(unused_variables)] value: &T, format: Format) -> Result<String, SerializeError> {
     let output = match format {
         #[cfg(feature = "serde_json")]
         Format::Json => serde_json::to_string_pretty(value)?,

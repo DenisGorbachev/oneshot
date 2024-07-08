@@ -2,9 +2,7 @@ use std::path::{Path, PathBuf};
 
 use derive_more::{Deref, DerefMut, Into};
 
-use oneshot_utils::functions::get_path_buf_relative_to_package_root::{
-    get_path_buf_relative_to_package_root, GetPathBufRelativeToPackageRootError,
-};
+use oneshot_utils::functions::get_path_buf_relative_to_package_root::{get_path_buf_relative_to_package_root, GetPathBufRelativeToPackageRootError};
 
 /// A `PathBuf` that is relative to the current package
 #[derive(Deref, DerefMut, Into, Ord, PartialOrd, Eq, PartialEq, Hash, Clone, Debug)]
@@ -18,7 +16,9 @@ pub struct PackagePathBuf {
 impl PackagePathBuf {
     pub fn new(path: impl AsRef<Path>) -> Result<Self, GetPathBufRelativeToPackageRootError> {
         let inner = get_path_buf_relative_to_package_root(path)?;
-        Ok(Self { inner })
+        Ok(Self {
+            inner,
+        })
     }
 }
 

@@ -10,13 +10,7 @@ use crate::types::output_target::OutputTarget;
 
 #[derive(Parser, Debug)]
 pub struct OutputOptions {
-    #[arg(
-        name = "output-target",
-        help = "This option is overridden by the --output-dir option",
-        long,
-        value_enum,
-        default_value_t
-    )]
+    #[arg(name = "output-target", help = "This option is overridden by the --output-dir option", long, value_enum, default_value_t)]
     pub target: OutputTarget,
 
     #[arg(name = "output-dir", long, value_parser = value_parser!(PathBuf))]
@@ -31,9 +25,7 @@ impl OutputOptions {
         match &self.dir {
             None => match &self.target {
                 OutputTarget::None => None,
-                OutputTarget::Package => {
-                    package_root_opt.map(|package_root| package_root.into().join(PROJECT_SUBDIR))
-                }
+                OutputTarget::Package => package_root_opt.map(|package_root| package_root.into().join(PROJECT_SUBDIR)),
                 OutputTarget::Home => PROJECT_DIRS
                     .clone()
                     .map(|dirs| dirs.data_local_dir().to_path_buf()),

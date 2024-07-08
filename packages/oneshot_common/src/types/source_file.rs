@@ -19,7 +19,10 @@ impl SourceFile {
     pub fn from_path_buf(path_buf: impl Into<PathBuf>) -> io::Result<Self> {
         let path_buf = path_buf.into();
         let content = read_to_string(path_buf.as_path())?;
-        Ok(Self { path_buf, content })
+        Ok(Self {
+            path_buf,
+            content,
+        })
     }
 
     #[cfg(all(feature = "serde", feature = "serde-xml-rs"))]
