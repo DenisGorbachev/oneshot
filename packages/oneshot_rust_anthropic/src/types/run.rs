@@ -1,9 +1,7 @@
-use std::iter::once;
 use std::path::PathBuf;
 
 use clap::{value_parser, Parser};
 use clust::Client;
-use fs_err::read_to_string;
 use time::OffsetDateTime;
 
 use clust_ext::functions::message::user_message;
@@ -19,7 +17,7 @@ use oneshot_utils::types::counter::Counter;
 use crate::functions::acquire_conversation_dir_from_options::acquire_conversation_dir_from_options;
 use crate::functions::create_a_message_with_output::create_a_message_with_output;
 use crate::functions::messages_request_body::messages_request_body;
-use crate::specs::to_related_files_spec::to_related_files_from_content;
+use crate::specs::to_related_files_spec::get_source_files_from_path_buf;
 use crate::types::output_options::OutputOptions;
 use crate::types::print_options::PrintOptions;
 
@@ -54,12 +52,13 @@ impl Run {
         let workspace_root_path_opt = workspace_root_opt.as_deref();
         let language_opt = Language::maybe_from(file_path);
         let role = role_from_language_maybe(language_opt);
-        let file_content = read_to_string(file_path)?;
-        let related_source_files = to_related_files_from_content(file_path, &file_content)?;
+        // let file_content = read_to_string(file_path)?;
+        // related_source_files includes the current file
+        let related_source_files = get_source_files_from_path_buf(file_path_buf.clone())?;
         let related_source_files_xml = SourceFile::to_xml_many(related_source_files.as_slice())?;
         let extra_source_files = SourceFile::from_path_bufs(extra_file_path_bufs)?;
         let extra_source_files_xml = SourceFile::to_xml_many(extra_source_files.as_slice())?;
-        let source_file = SourceFile::new(file_path_buf.clone(), file_content);
+        // let source_file = SourceFile::new(file_path_buf.clone(), file_content);
         let output_dir_opt = output_options.dir(package_root_path_opt);
         let format = output_options.format;
         let mut request_counter = Counter::<u64>::default();
@@ -68,8 +67,8 @@ impl Run {
             .into_iter()
             .flatten()
             .chain(related_source_files_xml)
-            .chain(extra_source_files_xml)
-            .chain(once(source_file.to_xml()?));
+            .chain(extra_source_files_xml);
+        // .chain(once(source_file.to_xml()?));
         let user_content = join_message_parts(user_content_parts);
 
         let request_body = messages_request_body(role, vec![user_message(user_content)]);

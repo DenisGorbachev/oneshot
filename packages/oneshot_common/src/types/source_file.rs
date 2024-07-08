@@ -1,9 +1,9 @@
-use std::fs::read_to_string;
 use std::io;
 use std::path::{Path, PathBuf};
 
 use derive_getters::{Dissolve, Getters};
 use derive_new::new;
+use fs_err::read_to_string;
 
 /// `content` is not guaranteed to come from `path_buf` because it is possible to call `SourceFile::new` with any arguments (this is intentional)
 #[derive(new, Getters, Dissolve, Ord, PartialOrd, Eq, PartialEq, Default, Hash, Clone, Debug)]
