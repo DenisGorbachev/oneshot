@@ -10,6 +10,7 @@ use syn::{parse_file, UseTree};
 
 use oneshot_common::types::source_file::SourceFile;
 
+use crate::specs::into_file_paths::into_file_paths;
 use crate::types::file_item::FileItem;
 
 pub type FileContent = String;
@@ -53,14 +54,6 @@ pub fn to_related_files_from_source_file(source_file: &SourceFile) -> Result<Vec
 
 fn into_file_paths_from_syn_file(path: &Path, file: syn::File) -> anyhow::Result<Vec<PathBuf>> {
     into_file_paths(path, into_use_trees(file)?)
-}
-
-/// # Arguments
-///
-/// * `file_path` - the path of the file that contains the [`use_trees`](UseTree)
-/// * `use_trees` - the use trees that were extracted from the file specified by the path
-fn into_file_paths(file_path: &Path, use_trees: Vec<UseTree>) -> anyhow::Result<Vec<PathBuf>> {
-    todo!()
 }
 
 /// A related file is any file that is mentioned in the use statement

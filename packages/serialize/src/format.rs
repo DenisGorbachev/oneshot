@@ -9,7 +9,7 @@ pub enum Format {
     Json,
     #[cfg(feature = "serde_yaml")]
     Yaml,
-    #[cfg(feature = "serde_xml_rs")]
+    #[cfg(any(feature = "serde-xml-rs", feature = "quick-xml"))]
     Xml,
 }
 
@@ -20,7 +20,7 @@ impl Format {
             Format::Json => "json",
             #[cfg(feature = "serde_yaml")]
             Format::Yaml => "yaml",
-            #[cfg(feature = "serde_xml_rs")]
+            #[cfg(any(feature = "serde-xml-rs", feature = "quick-xml"))]
             Format::Xml => "xml",
             #[allow(unreachable_patterns)]
             _ => "txt",

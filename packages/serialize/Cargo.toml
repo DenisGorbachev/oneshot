@@ -14,3 +14,4 @@ thiserror = { workspace = true }
 clap = { optional = true, workspace = true }
 derive_more = { workspace = true }
 serde-xml-rs = { workspace = true, optional = true }
+quick-xml = { workspace = true, optional = true, features = ["serialize"] }

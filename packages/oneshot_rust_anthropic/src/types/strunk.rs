@@ -21,6 +21,7 @@ use crate::functions::acquire_conversation_dir_from_options::acquire_conversatio
 use crate::functions::create_a_message_with_output::create_a_message_with_output;
 use crate::functions::do_print::do_print;
 use crate::functions::messages_request_body::messages_request_body;
+use crate::functions::strip_line_number::strip_line_number_from_path_buf;
 use crate::types::output_options::OutputOptions;
 use crate::types::print_options::PrintOptions;
 
@@ -42,12 +43,12 @@ pub struct Strunk {
 impl Strunk {
     pub async fn execute(self, client: Client, now: OffsetDateTime) -> anyhow::Result<()> {
         let Self {
-            file_path_buf,
+            mut file_path_buf,
             output_options,
             print_options,
             overwrite,
         } = self;
-        // let info = FileInfo::from(path_buf);
+        strip_line_number_from_path_buf(&mut file_path_buf);
         let file_path = file_path_buf.as_path();
         let package_root_opt = find_package_root(file_path)?;
         let package_root_path_opt = package_root_opt.as_deref();

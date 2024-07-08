@@ -1,23 +1,29 @@
-use std::io;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
-use crate::functions::cargo_toml::cargo_toml_maybe_if_exists;
+use crate::functions::cargo_toml::cargo_toml_path_buf;
 use crate::functions::get_parts_from_maybe_strings::join_message_part_opts;
 use crate::functions::implement_file_instruction::implement_file_instruction;
-use crate::functions::intro::intro_maybe;
-use crate::functions::push_readme_if_exists::readme_maybe_if_exists;
+use crate::functions::readme::readme_path_buf;
 use crate::types::language::Language;
+use crate::types::source_file::{FromPathBufToXmlIfExists, SourceFile};
 
-pub fn default_user_content_string(file_path: &Path, language_opt: Option<Language>, package_root_opt: Option<&Path>, workspace_root_opt: Option<&Path>) -> io::Result<String> {
+pub fn default_user_content_string(file_path: &Path, language_opt: Option<Language>, package_root_opt: Option<&Path>, workspace_root_opt: Option<&Path>) -> Result<String, FromPathBufToXmlIfExists> {
     default_user_content_vec(file_path, language_opt, package_root_opt, workspace_root_opt).map(join_message_part_opts)
 }
 
-pub fn default_user_content_vec(file_path: &Path, language_opt: Option<Language>, package_root_opt: Option<&Path>, workspace_root_opt: Option<&Path>) -> io::Result<Vec<Option<String>>> {
+pub fn default_user_content_vec(file_path: &Path, language_opt: Option<Language>, package_root_opt: Option<&Path>, workspace_root_opt: Option<&Path>) -> Result<Vec<Option<String>>, FromPathBufToXmlIfExists> {
     Ok(vec![
-        intro_maybe(language_opt),
-        readme_maybe_if_exists(package_root_opt)?,
-        cargo_toml_maybe_if_exists(package_root_opt)?,
-        cargo_toml_maybe_if_exists(workspace_root_opt)?,
+        to_xml_via_source_file(package_root_opt, readme_path_buf)?,
+        to_xml_via_source_file(package_root_opt, cargo_toml_path_buf)?,
+        to_xml_via_source_file(workspace_root_opt, cargo_toml_path_buf)?,
         Some(implement_file_instruction(language_opt, file_path)),
     ])
+}
+
+pub fn to_xml_via_source_file(path_opt: Option<&Path>, mapper: impl FnOnce(&Path) -> PathBuf) -> Result<Option<String>, FromPathBufToXmlIfExists> {
+    path_opt
+        .map(mapper)
+        .map(SourceFile::from_path_buf_to_xml_if_exists)
+        .transpose()
+        .map(Option::flatten)
 }

@@ -2,12 +2,6 @@
 
 OneShot Anthropic API is a library that provides access to Anthropic API.
 
-It has the following
-
-## Specification
-
-Use
-
 ## Implementation details
 
 * Use clap v4 derive to parse the command-line arguments

@@ -19,3 +19,4 @@ serde-xml-rs = { workspace = true, optional = true }
 fs-err = { workspace = true }
 bat = { workspace = true }
 itertools = { workspace = true }
+quick-xml = { workspace = true }
