@@ -7,5 +7,6 @@ pub mod get_real_conversation_writer_from_dir_and_time;
 pub mod messages_request_body;
 pub mod output;
 pub mod strip_line_number;
+pub mod uri_to_file_path;
 pub mod write_message;
 pub mod write_message_by_id_role;

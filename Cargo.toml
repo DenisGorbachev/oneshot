@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["packages/oneshot_utils", "packages/oneshot_rust_anthropic", "packages/oneshot_cli", "packages/oneshot_common", "packages/oneshot_rust", "packages/clust_ext", "packages/pseudorust", "packages/serialize"]
+members = ["packages/oneshot_utils", "packages/oneshot_rust_anthropic", "packages/oneshot_cli", "packages/oneshot_common", "packages/oneshot_rust", "packages/clust_ext", "packages/pseudorust", "packages/serialize", "packages/lsp_client"]
 
 [workspace.package]
 version = "0.1.0"
@@ -26,12 +26,17 @@ serde = { version = "1.0.203", features = ["derive"] }
 serde_json = "1.0.120"
 serde-xml-rs = "0.6.0"
 reqwest = "0.12.5"
-syn = { version = "2.0.68", features = ["full"] }
-quote = "1.0.36"
+proc-macro2 = { version = "1.0.86", features = ["span-locations"] }
+syn = { version = "2.0.68", features = ["full", "visit"] }
+quote = { version = "1.0.36" }
 env_logger = { version = "0.11.3" }
 tokio-stream = { version = "0.1.15" }
+clust_ext = { path = "./packages/clust_ext" }
+serialize = { path = "./packages/serialize", features = ["clap", "serde_json", "serde_yaml"] }
 oneshot_common = { path = "./packages/oneshot_common", features = ["serde", "quick-xml"] }
 oneshot_utils = { path = "./packages/oneshot_utils" }
+oneshot_rust = { path = "./packages/oneshot_rust" }
+fierce_nerds_node = { path = "../zenbox/fierce_nerds_node" }
 fs-err = { version = "2.11.0" }
 itertools = { version = "0.13.0" }
 bat = { version = "0.24.0", default-features = false, features = ["paging", "regex-fancy"] }
@@ -54,6 +59,7 @@ rustc-hash = { version = "2.0.0" }
 quick-xml = { version = "0.35.0", features = ["serialize"] }
 duct = { version = "0.13.7" }
 tempfile = { version = "3.10.1" }
+lsp-types = { version = "0.97.0" }
 
 #[profile.test.package.proptest]
 #opt-level = 3
