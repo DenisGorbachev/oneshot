@@ -2,21 +2,18 @@ use std::path::{Path, PathBuf};
 
 use crate::functions::cargo_toml::cargo_toml_path_buf;
 use crate::functions::get_parts_from_maybe_strings::join_message_part_opts;
-use crate::functions::implement_file_instruction::implement_file_instruction;
 use crate::functions::readme::readme_path_buf;
-use crate::types::language::Language;
 use crate::types::source_file::{FromPathBufToXmlIfExists, SourceFile};
 
-pub fn default_user_content_string(file_path: &Path, language_opt: Option<Language>, package_root_opt: Option<&Path>, workspace_root_opt: Option<&Path>) -> Result<String, FromPathBufToXmlIfExists> {
-    default_user_content_vec(file_path, language_opt, package_root_opt, workspace_root_opt).map(join_message_part_opts)
+pub fn default_user_content_string(package_root_opt: Option<&Path>, workspace_root_opt: Option<&Path>) -> Result<String, FromPathBufToXmlIfExists> {
+    default_user_content_vec(package_root_opt, workspace_root_opt).map(join_message_part_opts)
 }
 
-pub fn default_user_content_vec(file_path: &Path, language_opt: Option<Language>, package_root_opt: Option<&Path>, workspace_root_opt: Option<&Path>) -> Result<Vec<Option<String>>, FromPathBufToXmlIfExists> {
+pub fn default_user_content_vec(package_root_opt: Option<&Path>, workspace_root_opt: Option<&Path>) -> Result<Vec<Option<String>>, FromPathBufToXmlIfExists> {
     Ok(vec![
         to_xml_via_source_file(package_root_opt, readme_path_buf)?,
         to_xml_via_source_file(package_root_opt, cargo_toml_path_buf)?,
         to_xml_via_source_file(workspace_root_opt, cargo_toml_path_buf)?,
-        Some(implement_file_instruction(language_opt, file_path)),
     ])
 }
 

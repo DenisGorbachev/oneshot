@@ -15,8 +15,7 @@ lazy_static = { workspace = true }
 strum = { workspace = true }
 oneshot_utils = { path = "../oneshot_utils" }
 serde = { workspace = true, optional = true }
-serde-xml-rs = { workspace = true, optional = true }
 fs-err = { workspace = true }
 bat = { workspace = true }
 itertools = { workspace = true }
-quick-xml = { workspace = true }
+quick-xml = { workspace = true, optional = true }

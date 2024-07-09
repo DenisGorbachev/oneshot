@@ -1306,7 +1306,6 @@ dependencies = [
  "oneshot_utils",
  "quick-xml 0.35.0",
  "serde",
- "serde-xml-rs",
  "strum",
 ]
 

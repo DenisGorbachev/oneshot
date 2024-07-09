@@ -1,3 +1,4 @@
+use std::iter::once;
 use std::path::PathBuf;
 
 use clap::{value_parser, Parser};
@@ -7,6 +8,7 @@ use time::OffsetDateTime;
 use clust_ext::functions::message::user_message;
 use oneshot_common::functions::default_user_content::default_user_content_vec;
 use oneshot_common::functions::get_parts_from_maybe_strings::join_message_parts;
+use oneshot_common::functions::implement_file_instruction::implement_file_instruction;
 use oneshot_common::functions::role_from_language_maybe::role_from_language_maybe;
 use oneshot_common::types::language::Language;
 use oneshot_common::types::source_file::SourceFile;
@@ -18,6 +20,7 @@ use crate::functions::acquire_conversation_dir_from_options::acquire_conversatio
 use crate::functions::create_a_message_with_output::create_a_message_with_output;
 use crate::functions::messages_request_body::messages_request_body;
 use crate::functions::strip_line_number::strip_line_number_from_path_buf;
+use crate::specs::to_related_files_spec::get_unique_source_files_from_path_buf;
 use crate::types::output_options::OutputOptions;
 use crate::types::print_options::PrintOptions;
 
@@ -58,20 +61,20 @@ impl Run {
         let role = role_from_language_maybe(language_opt);
         // let file_content = read_to_string(file_path)?;
         // related_source_files includes the current file
-        // let related_source_files = get_source_files_from_path_buf(file_path_buf.clone())?;
-        // let related_source_files_xml = SourceFile::to_xml_many(related_source_files.as_slice())?;
-        let extra_source_files = SourceFile::from_path_bufs(extra_file_path_bufs)?;
-        let extra_source_files_xml = SourceFile::to_xml_many(extra_source_files.as_slice())?;
+        let source_files = get_unique_source_files_from_path_buf(file_path_buf.clone())?;
+        let source_files_xml = SourceFile::to_xml_many(source_files.as_slice())?;
+        let extra_source_files_xml = SourceFile::from_path_bufs_to_xml(extra_file_path_bufs)?;
         // let source_file = SourceFile::new(file_path_buf.clone(), file_content);
         let output_dir_opt = output_options.dir(package_root_path_opt);
         let format = output_options.format;
         let mut request_counter = Counter::<u64>::default();
 
-        let user_content_parts = default_user_content_vec(file_path, language_opt, package_root_path_opt, workspace_root_path_opt)?
+        let user_content_parts = default_user_content_vec(package_root_path_opt, workspace_root_path_opt)?
             .into_iter()
             .flatten()
-            // .chain(related_source_files_xml)
-            .chain(extra_source_files_xml);
+            .chain(source_files_xml)
+            .chain(extra_source_files_xml)
+            .chain(once(implement_file_instruction(language_opt, file_path)));
         // .chain(once(source_file.to_xml()?));
         let user_content = join_message_parts(user_content_parts);
 

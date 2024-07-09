@@ -1,3 +1,4 @@
+use std::iter::once;
 use std::path::PathBuf;
 
 use clap::{value_parser, Parser};
@@ -9,7 +10,9 @@ use time::OffsetDateTime;
 
 use clust_ext::functions::into_response_text::into_response_text;
 use clust_ext::functions::message::{assistant_message, user_message};
-use oneshot_common::functions::default_user_content::default_user_content_string;
+use oneshot_common::functions::default_user_content::default_user_content_vec;
+use oneshot_common::functions::get_parts_from_maybe_strings::join_message_parts;
+use oneshot_common::functions::implement_file_instruction::implement_file_instruction;
 use oneshot_common::functions::role_from_language_maybe::role_from_language_maybe;
 use oneshot_common::types::language::Language;
 use oneshot_common::types::pretty_printer_builder::PrettyPrinterBuilder;
@@ -61,7 +64,11 @@ impl Strunk {
         let format = output_options.format;
         let mut request_counter = Counter::<u64>::default();
 
-        let user_content = default_user_content_string(file_path, language_opt, package_root_path_opt, workspace_root_path_opt)?;
+        let user_content_parts = default_user_content_vec(package_root_path_opt, workspace_root_path_opt)?
+            .into_iter()
+            .flatten()
+            .chain(once(implement_file_instruction(language_opt, file_path)));
+        let user_content = join_message_parts(user_content_parts);
 
         // let source_file_xml = SourceFile::new(path, file)?.serialize_to_xml()?;
 

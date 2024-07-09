@@ -30,7 +30,7 @@ syn = { version = "2.0.68", features = ["full"] }
 quote = "1.0.36"
 env_logger = { version = "0.11.3" }
 tokio-stream = { version = "0.1.15" }
-oneshot_common = { path = "./packages/oneshot_common", features = ["serde", "serde-xml-rs"] }
+oneshot_common = { path = "./packages/oneshot_common", features = ["serde", "quick-xml"] }
 oneshot_utils = { path = "./packages/oneshot_utils" }
 fs-err = { version = "2.11.0" }
 itertools = { version = "0.13.0" }

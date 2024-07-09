@@ -8,10 +8,11 @@ use fmt_derive::Display;
 use fs_err::read_to_string;
 
 /// `content` is not guaranteed to come from `path_buf` because it is possible to call `SourceFile::new` with any arguments (this is intentional)
-#[derive(new, Getters, Dissolve, Ord, PartialOrd, Eq, PartialEq, Default, Hash, Clone, Debug)]
+#[derive(new, Getters, Dissolve, From, Ord, PartialOrd, Eq, PartialEq, Default, Hash, Clone, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct SourceFile {
     #[new(into)]
+    #[serde(rename = "path")]
     path_buf: PathBuf,
     #[new(into)]
     content: String,
@@ -40,12 +41,12 @@ impl SourceFile {
         path_bufs.into_iter().map(Self::from_path_buf).collect()
     }
 
-    #[cfg(all(feature = "serde", feature = "serde-xml-rs"))]
+    #[cfg(all(feature = "serde", feature = "quick-xml"))]
     pub fn to_xml(&self) -> Result<String, quick_xml::DeError> {
         quick_xml::se::to_string(self)
     }
 
-    #[cfg(all(feature = "serde", feature = "serde-xml-rs"))]
+    #[cfg(all(feature = "serde", feature = "quick-xml"))]
     pub fn from_path_buf_to_xml_if_exists(path_buf: impl Into<PathBuf>) -> Result<Option<String>, FromPathBufToXmlIfExists> {
         let source_file_opt = SourceFile::from_path_buf_if_exists(path_buf).transpose()?;
         let content_xml_opt = source_file_opt
@@ -55,7 +56,16 @@ impl SourceFile {
         Ok(content_xml_opt)
     }
 
-    #[cfg(all(feature = "serde", feature = "serde-xml-rs"))]
+    #[cfg(all(feature = "serde", feature = "quick-xml"))]
+    pub fn from_path_bufs_to_xml<P: Into<PathBuf>>(path_bufs: impl IntoIterator<Item = P>) -> Result<Vec<String>, FromPathBufToXmlIfExists> {
+        let source_files = Self::from_path_bufs(path_bufs)?;
+        source_files
+            .into_iter()
+            .map(|file| file.to_xml().map_err(FromPathBufToXmlIfExists::from))
+            .collect()
+    }
+
+    #[cfg(all(feature = "serde", feature = "quick-xml"))]
     pub fn to_xml_many<'a>(files: impl IntoIterator<Item = &'a Self>) -> Result<Vec<String>, quick_xml::DeError> {
         files.into_iter().map(Self::to_xml).collect()
     }

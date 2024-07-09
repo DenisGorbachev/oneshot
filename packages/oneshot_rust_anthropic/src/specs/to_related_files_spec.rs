@@ -24,7 +24,7 @@ pub fn get_source_files_map(path_buf: PathBuf) -> anyhow::Result<FileContentMap>
         let path = path_buf.as_path();
         let content = read_to_string(path)?;
         let file = parse_file(&content)?;
-        let path_bufs_raw = into_file_paths_from_syn_file(path, file)?;
+        let path_bufs_raw: Vec<PathBuf> = vec![]; // TODO: into_file_paths_from_syn_file(path, file)?;
         let path_bufs_filtered = path_bufs_raw.into_iter().filter(|pb| !map.contains_key(pb));
         path_bufs_to_process.extend(path_bufs_filtered);
         map.insert(path_buf, content);
@@ -32,21 +32,25 @@ pub fn get_source_files_map(path_buf: PathBuf) -> anyhow::Result<FileContentMap>
     Ok(map)
 }
 
+pub fn get_unique_source_files_from_path_buf(path_buf: PathBuf) -> Result<Vec<SourceFile>, anyhow::Error> {
+    get_source_files_map(path_buf).map(|map| map.into_iter().map(SourceFile::from).collect())
+}
+
 /// The LLM should see the final source_file after its related files
-pub fn get_source_files_from_path_buf(path_buf: PathBuf) -> Result<Vec<SourceFile>, anyhow::Error> {
+pub fn get_all_source_files_from_path_buf(path_buf: PathBuf) -> Result<Vec<SourceFile>, anyhow::Error> {
     let source_file = SourceFile::from_path_buf(path_buf)?;
-    let mut source_files = to_related_files_from_source_file(&source_file)?;
+    let mut source_files = to_all_related_files_from_source_file(&source_file)?;
     source_files.push(source_file);
     Ok(source_files)
 }
 
 /// Optimize: in return type, replace `Vec` with `impl Iterator<Item=SourceFile>`
-pub fn to_related_files_from_source_file(source_file: &SourceFile) -> Result<Vec<SourceFile>, anyhow::Error> {
+pub fn to_all_related_files_from_source_file(source_file: &SourceFile) -> Result<Vec<SourceFile>, anyhow::Error> {
     let file = parse_file(source_file.content())?;
     let use_path_bufs = into_file_paths_from_syn_file(source_file.path_buf().as_path(), file)?;
     let source_files_vec = use_path_bufs
         .into_iter()
-        .map(get_source_files_from_path_buf)
+        .map(get_all_source_files_from_path_buf)
         .collect::<anyhow::Result<Vec<Vec<SourceFile>>>>()?;
     let source_files = source_files_vec.into_iter().flatten().collect();
     Ok(source_files)
