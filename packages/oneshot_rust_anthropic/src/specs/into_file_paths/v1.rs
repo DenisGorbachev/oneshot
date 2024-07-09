@@ -11,7 +11,7 @@ use syn::{UseGroup, UsePath, UseTree};
 /// * `use_trees` - the use trees that were extracted from the file specified by the path
 ///
 /// The paths that are prefixed by `crate::` must be
-pub fn into_file_paths(package_root: &Path, use_trees: Vec<UseTree>) -> Result<Vec<PathBuf>> {
+pub fn into_file_paths_v1(package_root: &Path, use_trees: Vec<UseTree>) -> Result<Vec<PathBuf>> {
     let mut file_paths = Vec::new();
 
     for use_tree in use_trees {

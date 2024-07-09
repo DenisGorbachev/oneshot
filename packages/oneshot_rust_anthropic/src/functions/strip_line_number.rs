@@ -36,6 +36,12 @@ pub fn strip_line_number_from_path_buf(path_buf: &mut PathBuf) {
     }
 }
 
+pub fn strip_line_numbers_from_path_bufs(path_bufs: &mut [PathBuf]) {
+    path_bufs
+        .iter_mut()
+        .for_each(strip_line_number_from_path_buf);
+}
+
 #[cfg(test)]
 mod tests {
     use std::path::PathBuf;

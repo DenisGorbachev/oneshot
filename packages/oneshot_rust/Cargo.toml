@@ -17,3 +17,6 @@ oneshot_utils = { workspace = true }
 oneshot_common = { workspace = true }
 bat = { workspace = true }
 pulldown-cmark = { workspace = true }
+serde_json = { workspace = true }
+duct = { workspace = true }
+indexmap = { workspace = true }

@@ -32,3 +32,4 @@ pub mod constants;
 pub mod specs;
 pub mod statics;
 mod tasks;
+mod test_files;

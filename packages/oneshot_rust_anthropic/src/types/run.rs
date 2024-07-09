@@ -12,14 +12,14 @@ use oneshot_common::functions::implement_file_instruction::implement_file_instru
 use oneshot_common::functions::role_from_language_maybe::role_from_language_maybe;
 use oneshot_common::types::language::Language;
 use oneshot_common::types::source_file::SourceFile;
-use oneshot_utils::functions::find_package_root::{find_package_root, find_workspace_root_from_canonical_package_root_opt};
+use oneshot_utils::functions::find_package_root::{find_workspace_root_from_canonical_package_root_opt, get_package_root};
 use oneshot_utils::traits::maybe_from::MaybeFrom;
 use oneshot_utils::types::counter::Counter;
 
 use crate::functions::acquire_conversation_dir_from_options::acquire_conversation_dir_from_options;
 use crate::functions::create_a_message_with_output::create_a_message_with_output;
 use crate::functions::messages_request_body::messages_request_body;
-use crate::functions::strip_line_number::strip_line_number_from_path_buf;
+use crate::functions::strip_line_number::{strip_line_number_from_path_buf, strip_line_numbers_from_path_bufs};
 use crate::specs::to_related_files_spec::get_unique_source_files_from_path_buf;
 use crate::types::output_options::OutputOptions;
 use crate::types::print_options::PrintOptions;
@@ -49,11 +49,10 @@ impl Run {
             mut file_path_buf,
         } = self;
         strip_line_number_from_path_buf(&mut file_path_buf);
-        extra_file_path_bufs
-            .iter_mut()
-            .for_each(strip_line_number_from_path_buf);
+        strip_line_numbers_from_path_bufs(&mut extra_file_path_bufs);
         let file_path = file_path_buf.as_path();
-        let package_root_opt = find_package_root(file_path)?;
+        let package_root = get_package_root(file_path)?;
+        let package_root_opt = Some(package_root.clone()); // TODO: Refactor the code to take package_root as argument instead of package_root_opt
         let package_root_path_opt = package_root_opt.as_deref();
         let workspace_root_opt = find_workspace_root_from_canonical_package_root_opt(package_root_path_opt);
         let workspace_root_path_opt = workspace_root_opt.as_deref();
@@ -61,7 +60,7 @@ impl Run {
         let role = role_from_language_maybe(language_opt);
         // let file_content = read_to_string(file_path)?;
         // related_source_files includes the current file
-        let source_files = get_unique_source_files_from_path_buf(file_path_buf.clone())?;
+        let source_files = get_unique_source_files_from_path_buf(package_root.as_path(), file_path_buf.clone())?;
         let source_files_xml = SourceFile::to_xml_many(source_files.as_slice())?;
         let extra_source_files_xml = SourceFile::from_path_bufs_to_xml(extra_file_path_bufs)?;
         // let source_file = SourceFile::new(file_path_buf.clone(), file_content);
