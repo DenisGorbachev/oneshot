@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["packages/oneshot_utils", "packages/oneshot_rust_anthropic", "packages/oneshot_cli", "packages/oneshot_common", "packages/oneshot_rust", "packages/clust_ext", "packages/pseudorust", "packages/serialize", "packages/lsp_client"]
+members = ["packages/oneshot_utils", "packages/oneshot_rust_anthropic", "packages/oneshot_cli", "packages/oneshot_common", "packages/oneshot_rust", "packages/clust_ext", "packages/pseudorust", "packages/lsp_client"]
 
 [workspace.package]
 version = "0.1.0"
@@ -32,7 +32,7 @@ quote = { version = "1.0.36" }
 env_logger = { version = "0.11.3" }
 tokio-stream = { version = "0.1.15" }
 clust_ext = { path = "./packages/clust_ext" }
-serialize = { path = "./packages/serialize", features = ["clap", "serde_json", "serde_yaml"] }
+serialize = { path = "../serialize", features = ["clap", "serde_json", "serde_yaml"] }
 oneshot_common = { path = "./packages/oneshot_common", features = ["serde", "quick-xml"] }
 oneshot_utils = { path = "./packages/oneshot_utils" }
 oneshot_rust = { path = "./packages/oneshot_rust" }
