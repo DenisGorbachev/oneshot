@@ -11,6 +11,8 @@ pub enum Format {
     Yaml,
     #[cfg(any(feature = "serde-xml-rs", feature = "quick-xml"))]
     Xml,
+    #[cfg(feature = "toml")]
+    Toml,
 }
 
 impl Format {
@@ -22,12 +24,14 @@ impl Format {
             Format::Yaml => "yaml",
             #[cfg(any(feature = "serde-xml-rs", feature = "quick-xml"))]
             Format::Xml => "xml",
+            #[cfg(feature = "toml")]
+            Format::Toml => "toml",
             #[allow(unreachable_patterns)]
             _ => "txt",
         }
     }
 
-    pub fn get_file_name(&self, stem: &str) -> String {
+    pub fn to_file_name(&self, stem: &str) -> String {
         format!("{stem}.{extension}", extension = self.to_file_extension())
     }
 }

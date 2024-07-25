@@ -9,18 +9,16 @@ use crate::format::Format;
 use crate::functions::serialize;
 use crate::functions::serialize::SerializeError;
 
-pub fn serialize_to_file<T: Serialize>(value: &T, file_dir: &Path, file_stem: &str, format: Format) -> Result<(), SerializeToFileError> {
-    let path_buf = file_dir.join(format.get_file_name(file_stem));
-    println!("Writing {path:?}", path = path_buf.as_path());
+pub fn save<T: Serialize>(value: &T, file_dir: impl AsRef<Path>, file_stem: &str, format: Format) -> Result<(), SaveError> {
+    let path_buf = file_dir.as_ref().join(format.to_file_name(file_stem));
     let mut file = File::create(path_buf)?;
     let output = serialize::serialize(value, format)?;
     file.write_all(output.as_bytes())?;
-    file.flush()?;
     Ok(())
 }
 
 #[derive(Error, Display, From, Debug)]
-pub enum SerializeToFileError {
+pub enum SaveError {
     Io(std::io::Error),
     Serialize(SerializeError),
 }

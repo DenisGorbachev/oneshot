@@ -2,7 +2,7 @@ use clust::messages::MessagesError;
 use derive_more::{Error, From};
 use fmt_derive::Display;
 
-use serialize::functions::serialize_to_file::SerializeToFileError;
+use serialize::functions::save::SaveError;
 
 use crate::types::conversation_dir_if_not_exists_error::ConversationDirIfNotExistsError;
 
@@ -12,7 +12,7 @@ pub enum StrunkError {
     TheIoError(std::io::Error),
     TheSynError(syn::Error),
     TheMessagesError(MessagesError),
-    TheSerializeToFileError(SerializeToFileError),
+    TheSerializeToFileError(SaveError),
     TheConversationDirIfNotExistsError(ConversationDirIfNotExistsError),
 }
 

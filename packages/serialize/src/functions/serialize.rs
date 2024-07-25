@@ -14,6 +14,8 @@ pub fn serialize<T: Serialize>(#[allow(unused_variables)] value: &T, format: For
         Format::Xml => serde_xml_rs::to_string(value)?,
         #[cfg(feature = "quick-xml")]
         Format::Xml => quick_xml::se::to_string(value)?,
+        #[cfg(feature = "toml")]
+        Format::Toml => toml::to_string(value)?,
         _ => String::new(),
     };
     Ok(output)
@@ -30,4 +32,6 @@ pub enum SerializeError {
     SerdeXmlRs(serde_xml_rs::Error),
     #[cfg(feature = "quick-xml")]
     QuickXml(quick_xml::DeError),
+    #[cfg(feature = "toml")]
+    Toml(toml::ser::Error),
 }
