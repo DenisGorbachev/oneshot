@@ -2,8 +2,7 @@ use std::path::Path;
 
 use clust::messages::{MessagesRequestBody, MessagesResponseBody};
 use clust::Client;
-
-use serialize::format::Format;
+use save_load::format::Format;
 
 use crate::functions::output::{output_request, output_response};
 use crate::types::strunk_error::StrunkError;

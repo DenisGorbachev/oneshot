@@ -1406,9 +1406,9 @@ dependencies = [
  "quote",
  "ratatui",
  "rustc-hash",
+ "save-load",
  "serde_json",
  "serde_yaml",
- "serialize",
  "strum",
  "syn 2.0.71",
  "tap",
@@ -1990,6 +1990,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "save-load"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "derive_more 0.99.18",
+ "serde",
+ "serde_json",
+ "serde_yaml",
+]
+
+[[package]]
 name = "schannel"
 version = "0.1.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2109,18 +2120,6 @@ dependencies = [
  "ryu",
  "serde",
  "unsafe-libyaml",
-]
-
-[[package]]
-name = "serialize"
-version = "0.1.0"
-dependencies = [
- "clap",
- "derive_more 0.99.18",
- "serde",
- "serde_json",
- "serde_yaml",
- "thiserror",
 ]
 
 [[package]]

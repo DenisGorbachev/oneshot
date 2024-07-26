@@ -1,8 +1,7 @@
 use std::path::PathBuf;
 
 use clap::{value_parser, Parser};
-
-use serialize::format::Format;
+use save_load::format::Format;
 
 use crate::constants::{CONVERSATIONS_SUBDIR, PROJECT_SUBDIR};
 use crate::statics::PROJECT_DIRS;

@@ -1,8 +1,7 @@
 use clust::messages::MessagesError;
 use derive_more::{Error, From};
 use fmt_derive::Display;
-
-use serialize::functions::save::SaveError;
+use save_load::errors::save_error::SaveError;
 
 use crate::types::conversation_dir_if_not_exists_error::ConversationDirIfNotExistsError;
 
