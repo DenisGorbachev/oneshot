@@ -6,6 +6,7 @@ use strum::Display;
 use Color::*;
 
 #[derive(ValueEnum, Display, Default, Debug, Clone, Copy)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Color {
     #[default]
     Auto,

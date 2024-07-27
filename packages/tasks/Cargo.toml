@@ -1,13 +1,10 @@
 [package]
-name = "clust_ext"
+name = "tasks"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 publish.workspace = true
 
 [dependencies]
-clust = { workspace = true }
-itertools = { workspace = true }
 derive_more = { workspace = true }
-derive-new = { workspace = true }
 serde = { workspace = true, optional = true }

@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["packages/oneshot_utils", "packages/oneshot_rust_anthropic", "packages/oneshot_cli", "packages/oneshot_common", "packages/oneshot_rust", "packages/clust_ext", "packages/pseudorust", "packages/lsp_client"]
+members = ["packages/oneshot_utils", "packages/oneshot_rust_anthropic", "packages/oneshot_cli", "packages/oneshot_common", "packages/oneshot_rust", "packages/clust_ext", "packages/pseudorust", "packages/lsp_client", "packages/hosted_app", "packages/tasks"]
 
 [workspace.package]
 version = "0.1.0"

@@ -13,6 +13,7 @@ derive-getters = { workspace = true }
 oneshot_common = { workspace = true }
 oneshot_utils = { workspace = true }
 anyhow = { workspace = true }
+serde = { workspace = true, optional = true }
 serde_json = { workspace = true }
 tokio = { workspace = true }
 clap = { workspace = true }

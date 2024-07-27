@@ -5,8 +5,6 @@ use fmt_derive::Display;
 
 /// This is experimental code, do not use it
 #[derive(new, Deref, DerefMut, Into, Clone, Debug)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "serde", serde(transparent))]
 pub struct Client<Writer>
 where
     Writer: ConversationWriter,
@@ -14,7 +12,6 @@ where
     #[deref]
     #[deref_mut]
     inner: clust::Client,
-    #[cfg_attr(feature = "serde", serde(skip))]
     writer: Writer,
 }
 

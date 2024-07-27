@@ -12,7 +12,6 @@ use fs_err::{File, OpenOptions};
 use crate::types::client::ConversationWriter;
 
 #[derive(new, Getters, Dissolve, Debug)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct RealConversationWriter {
     file: File,
 }
