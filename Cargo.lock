@@ -342,7 +342,7 @@ version = "0.1.0"
 dependencies = [
  "clust",
  "derive-new",
- "derive_more 1.0.0-beta.6",
+ "derive_more 1.0.0",
  "itertools",
  "serde",
 ]
@@ -506,7 +506,8 @@ dependencies = [
 [[package]]
 name = "derive-getters"
 version = "0.5.0"
-source = "git+https://git.sr.ht/~dengor/derive-getters?branch=feature/auto-copy-getters#beb4005fb92778053c370e45909fc5e9537e47cb"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "74ef43543e701c01ad77d3a5922755c6a1d71b22d942cb8042be4994b380caff"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -569,18 +570,18 @@ dependencies = [
 
 [[package]]
 name = "derive_more"
-version = "1.0.0-beta.6"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f7abbfc297053be59290e3152f8cbcd52c8642e0728b69ee187d991d4c1af08d"
+checksum = "4a9b99b9cbbe49445b21764dc0625032a89b145a2642e67603e1c936f5458d05"
 dependencies = [
  "derive_more-impl",
 ]
 
 [[package]]
 name = "derive_more-impl"
-version = "1.0.0-beta.6"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2bba3e9872d7c58ce7ef0fcf1844fcc3e23ef2a58377b50df35dd98e42a5726e"
+checksum = "cb7330aeadfbe296029522e6c40f315320aba36fc43a5b3632f3795348f3bd22"
 dependencies = [
  "convert_case 0.6.0",
  "proc-macro2",
@@ -704,7 +705,7 @@ version = "0.1.0"
 dependencies = [
  "derive-new",
  "derive_builder",
- "derive_more 1.0.0-beta.6",
+ "derive_more 1.0.0",
 ]
 
 [[package]]
@@ -1350,7 +1351,7 @@ dependencies = [
  "bat",
  "derive-getters",
  "derive-new",
- "derive_more 1.0.0-beta.6",
+ "derive_more 1.0.0",
  "fmt-derive",
  "fs-err",
  "indoc",
@@ -1369,7 +1370,7 @@ dependencies = [
  "bat",
  "derive-getters",
  "derive-new",
- "derive_more 1.0.0-beta.6",
+ "derive_more 1.0.0",
  "duct",
  "fmt-derive",
  "indexmap",
@@ -1394,7 +1395,7 @@ dependencies = [
  "constcat",
  "derive-getters",
  "derive-new",
- "derive_more 1.0.0-beta.6",
+ "derive_more 1.0.0",
  "directories",
  "env_logger",
  "fierce_nerds_node",
@@ -1433,7 +1434,7 @@ version = "0.1.0"
 dependencies = [
  "derive-getters",
  "derive-new",
- "derive_more 1.0.0-beta.6",
+ "derive_more 1.0.0",
  "fmt-derive",
  "fs-err",
  "num-traits",
@@ -2360,7 +2361,9 @@ checksum = "55937e1799185b12863d447f42597ed69d9928686b8d88a1df17376a097d8369"
 name = "tasks"
 version = "0.1.0"
 dependencies = [
- "derive_more 1.0.0-beta.6",
+ "derive-getters",
+ "derive-new",
+ "derive_more 1.0.0",
  "serde",
 ]
 

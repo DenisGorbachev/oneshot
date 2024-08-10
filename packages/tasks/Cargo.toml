@@ -8,3 +8,5 @@ publish.workspace = true
 [dependencies]
 derive_more = { workspace = true }
 serde = { workspace = true, optional = true }
+derive-getters = { workspace = true }
+derive-new = { workspace = true }

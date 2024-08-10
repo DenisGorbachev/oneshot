@@ -10,10 +10,10 @@ publish = false
 
 [workspace.dependencies]
 derive-new = { git = "https://github.com/OmarTawfik-forks/derive-new", branch = "impl-into" } # "0.6.0"
-derive_more = { version = "1.0.0-beta.6", features = ["full"] }
+derive_more = { version = "1.0.0", features = ["full"] }
 fmt-derive = "0.1.2"
 derive_builder = "0.20.0"
-derive-getters = { git = "https://git.sr.ht/~dengor/derive-getters", branch = "feature/auto-copy-getters", features = ["auto_copy_getters"] }
+derive-getters = { version = "0.5.0", features = ["auto_copy_getters"] }
 anyhow = "1.0.80"
 proptest = "1.5.0"
 clust = { git = "https://github.com/DenisGorbachev/clust.git", branch = "dev", features = ["hash"] }
