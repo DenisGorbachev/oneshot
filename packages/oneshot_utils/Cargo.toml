@@ -10,7 +10,6 @@ derive-new = { workspace = true }
 derive_more = { workspace = true }
 fmt-derive = { workspace = true }
 derive-getters = { workspace = true }
-strum = { workspace = true }
 num-traits = { workspace = true }
 fs-err = { workspace = true }
 serde = { workspace = true, optional = true }

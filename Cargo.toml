@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["packages/oneshot_utils", "packages/oneshot_rust_anthropic", "packages/oneshot_cli", "packages/oneshot_common", "packages/oneshot_rust", "packages/clust_ext", "packages/pseudorust", "packages/lsp_client", "packages/hosted_app", "packages/tasks"]
+members = ["packages/clust_ext", "packages/hosted_app", "packages/lsp_client", "packages/oneshot_cli", "packages/oneshot_common", "packages/oneshot_rust", "packages/oneshot_rust_anthropic", "packages/oneshot_utils", "packages/pseudorust", "packages/tasks"]
 
 [workspace.package]
 version = "0.1.0"
@@ -60,7 +60,6 @@ quick-xml = { version = "0.35.0", features = ["serialize"] }
 duct = { version = "0.13.7" }
 tempfile = { version = "3.10.1" }
 lsp-types = { version = "0.97.0" }
-
 #[profile.test.package.proptest]
 #opt-level = 3
 #

@@ -10,3 +10,11 @@ pre-commit:
       run: cargo nextest run --no-fail-fast
     test-docs:
       run: cargo test --doc
+    sort-deps:
+      run: cargo sort
+    lint-deps:
+      run: cargo machete --with-metadata
+commit-msg:
+  commands:
+    "lint commit message":
+      run: commitlint --edit "$1"
