@@ -9,7 +9,7 @@ rust-version = "1.79.0"
 publish = false
 
 [workspace.dependencies]
-derive-new = { git = "https://github.com/OmarTawfik-forks/derive-new", branch = "impl-into" } # "0.6.0"
+derive-new = "0.7.0"
 derive_more = { version = "1.0.0", features = ["full"] }
 fmt-derive = "0.1.2"
 derive_builder = "0.20.0"
@@ -33,7 +33,7 @@ env_logger = { version = "0.11.3" }
 tokio-stream = { version = "0.1.15" }
 clust_ext = { path = "./packages/clust_ext" }
 save-load = { path = "../save-load", features = ["clap", "serde_json", "serde_yaml"] }
-oneshot_common = { path = "./packages/oneshot_common", features = ["serde", "quick-xml"] }
+oneshot_common = { path = "./packages/oneshot_common" }
 oneshot_utils = { path = "./packages/oneshot_utils" }
 oneshot_rust = { path = "./packages/oneshot_rust" }
 fierce_nerds_node = { path = "../zenbox/fierce_nerds_node" }

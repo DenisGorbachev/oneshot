@@ -5,7 +5,7 @@ use derive_new::new;
 use crate::functions::pretty_printer::pretty_printer;
 
 #[derive(new, Getters, Dissolve, Ord, PartialOrd, Eq, PartialEq, Default, Hash, Clone, Debug)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct PrettyPrinterBuilder {
     theme: Option<String>,
     language: Option<String>,
