@@ -36,7 +36,6 @@ save-load = { path = "../save-load", features = ["clap", "serde_json", "serde_ya
 oneshot_common = { path = "./packages/oneshot_common" }
 oneshot_utils = { path = "./packages/oneshot_utils" }
 oneshot_rust = { path = "./packages/oneshot_rust" }
-fierce_nerds_node = { path = "../zenbox/fierce_nerds_node" }
 fs-err = { version = "2.11.0" }
 itertools = { version = "0.13.0" }
 bat = { version = "0.24.0", default-features = false, features = ["paging", "regex-fancy"] }

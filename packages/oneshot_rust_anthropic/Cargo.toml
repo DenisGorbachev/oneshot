@@ -34,7 +34,6 @@ constcat = { workspace = true }
 directories = { workspace = true }
 lazy_static = { workspace = true }
 bat = { workspace = true }
-fierce_nerds_node = { workspace = true }
 quote = { workspace = true }
 indexmap = { workspace = true }
 rustc-hash = { workspace = true }
