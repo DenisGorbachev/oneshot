@@ -41,4 +41,4 @@ tempfile = { workspace = true }
 lsp-types = { workspace = true }
 
 [package.metadata.cargo-machete]
-ignored = ["proc_macro2"]
+ignored = ["proc-macro2"]

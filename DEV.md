@@ -7,10 +7,10 @@
     * Examples
       * Writing Rust code
         * "Implement a Rust app for concatenating multiple PDF files"
-        * LLM sends [a response](./README.md#response) that contains both `main.rs` and the `Cargo.toml` file.
+        * LLM sends [a response](./README.old.md#response) that contains both `main.rs` and the `Cargo.toml` file.
     * Notes
       * Aider has solved this question.
-      * Other tools that are competing at SWE bench must solve this question. 
+      * Other tools that are competing at SWE bench must solve this question.
 * How to implement the plugin for adding a GitHub repo to LLM message?
   * Parameters
     * What to add?

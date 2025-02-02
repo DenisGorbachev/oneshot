@@ -1,5 +1,4 @@
 /// Used to avoid triggering "unreachable code" warning in client code
-
 pub fn stub<T>() -> T {
     todo!()
 }

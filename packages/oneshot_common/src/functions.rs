@@ -2,7 +2,6 @@ pub mod append_file;
 pub mod append_readme;
 pub mod cargo_toml;
 pub mod default_user_content;
-pub mod generate_file;
 pub mod get_parts_from_maybe_strings;
 pub mod implement_every_function;
 pub mod implement_file_instruction;
