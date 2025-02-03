@@ -1855,6 +1855,7 @@ dependencies = [
 [[package]]
 name = "save-load"
 version = "0.1.0"
+source = "git+https://github.com/DenisGorbachev/save-load#50584015f024f06555594d3e17cbd553b06a2316"
 dependencies = [
  "clap",
  "derive_more",

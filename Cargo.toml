@@ -32,7 +32,7 @@ quote = { version = "1.0.36" }
 env_logger = { version = "0.11.3" }
 tokio-stream = { version = "0.1.15" }
 clust_ext = { path = "./packages/clust_ext" }
-save-load = { path = "../save-load", features = ["clap", "serde_json", "serde_yaml"] }
+save-load = { git = "https://github.com/DenisGorbachev/save-load", features = ["clap", "serde_json", "serde_yaml"] }
 oneshot_common = { path = "./packages/oneshot_common" }
 oneshot_utils = { path = "./packages/oneshot_utils" }
 oneshot_rust = { path = "./packages/oneshot_rust" }
