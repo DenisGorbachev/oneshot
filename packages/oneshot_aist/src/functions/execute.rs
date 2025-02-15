@@ -8,7 +8,6 @@ use std::path::Path;
 use std::process::Command;
 use syn::File;
 use syn_more::SynFrom;
-use ExecuteV2Error::*;
 use FinishReason::*;
 
 pub fn execute_v1(path: &Path, _command: Command) -> Outcome {
@@ -21,6 +20,7 @@ pub fn execute_v1(path: &Path, _command: Command) -> Outcome {
 ///
 /// TODO: Implement forking for each ChatChoice
 pub async fn execute_v2<C: Config, E: Error, Validator: ValidateV1<String, Error = E>, Test: FnMut(&str) -> Vec<E>>(input: String, validator: &Validator, client: &Client<C>, args: &CreateChatCompletionRequestArgs, mut gas: u32) -> Result<String, ExecuteV2Error<Vec<E>>> {
+    use ExecuteV2Error::*;
     let errors = validator.validate_v1(&input);
     if errors.is_empty() {
         return Ok(input);

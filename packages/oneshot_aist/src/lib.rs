@@ -16,5 +16,13 @@ pub use types::*;
 mod functions;
 
 pub use functions::*;
+
 mod utils;
+
 pub use utils::*;
+
+mod ext;
+
+pub use ext::*;
+
+mod tests;
