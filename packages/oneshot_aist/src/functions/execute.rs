@@ -71,16 +71,16 @@ pub struct TraceReqRes {
 }
 
 /// This function returns at least one trace even if `gas == 0`.
-pub async fn execute_v3<Config, Candidate, Problem, Choices, Validate>(validate: &mut Validate, mut gas: u32, client_arc: Arc<Client<Config>>, request: Arc<CreateChatCompletionRequest>) -> (Option<ChatChoice>, Vec<TraceReqRes>)
+/// This function uses `Arc<Client>` instead of `Client` because `Client` has a `backoff: backoff::ExponentialBackoff` field, and we want to use a single backoff strategy across multiple threads
+pub async fn execute_v3<Config, Candidate, Problem, Choices, Validate>(validate: &mut Validate, mut gas: u32, client_arc: Arc<Client<Config>>, request: CreateChatCompletionRequest) -> (Option<ChatChoice>, Vec<TraceReqRes>)
 where
     Config: ConfigLike + Send + Sync + 'static,
     Choices: Iterator<Item = ChatChoice>,
     Validate: FnMut(&ChatChoice) -> ControlFlow<(), Vec<ChatCompletionRequestMessage>>,
 {
     // TODO: Remove Arc ?
-    let request_initial = request.deref();
-    let response_result_initial = client_arc.chat().create(request_initial.clone()).await;
-    let trace = TraceReqRes::new(request_initial.clone(), response_result_initial);
+    let response_result_initial = client_arc.chat().create(request.clone()).await;
+    let trace = TraceReqRes::new(request.clone(), response_result_initial);
     let mut traces_current: Vec<TraceReqRes> = vec![trace];
     let mut traces_all: Vec<TraceReqRes> = vec![];
     // TODO: it looks like `traces_current` is never empty
@@ -94,7 +94,7 @@ where
             })
             .collect_vec();
         traces_all.extend(traces_current);
-        let control_flow = get_correct_choice_or_requests(choices.clone().into_iter(), validate, request_initial.clone());
+        let control_flow = get_correct_choice_or_requests(choices.clone().into_iter(), validate, request.clone());
         match control_flow {
             Break(choice) => return (Some(choice), traces_all),
             Continue(requests) => {
