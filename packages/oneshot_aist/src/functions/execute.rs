@@ -62,7 +62,7 @@ pub struct Trace<Input, Problem> {
 
 pub type Traces<Input, Problem> = Vec<Trace<Input, Problem>>;
 
-pub async fn execute_v3<Config, Candidate, Problem, Choices, Validate>(choices: Choices, mut validate: Validate, client: Arc<Client<Config>>, args: Arc<CreateChatCompletionRequestArgs>) -> Result<ChatChoice, Vec<Result<CreateChatCompletionResponse, OpenAIError>>>
+pub async fn execute_v3<Config, Candidate, Problem, Choices, Validate>(choices: Choices, mut validate: Validate, client: Arc<Client<Config>>, args: Arc<CreateChatCompletionRequestArgs>) -> Result<ChatChoice, JoinSet<Result<CreateChatCompletionResponse, OpenAIError>>>
 where
     Config: ConfigLike + Send + Sync + 'static,
     Choices: Iterator<Item = ChatChoice>,
@@ -84,8 +84,7 @@ where
             }
         }
     }
-    // TODO: Return `JoinSet` instead of `Vec` directly?
-    let join_set: JoinSet<_> = branches
+    let join_set = branches
         .into_iter()
         .map(move |messages| {
             // TODO: Optimize with async closures?
@@ -97,8 +96,7 @@ where
             }
         })
         .collect();
-    let res = join_set.join_all().await;
-    Err(res)
+    Err(join_set)
     // let mut traces: Traces<StringInput, Problem> = vec![];
     // let mut traces_index = 0;
     // while gas != 0 {
