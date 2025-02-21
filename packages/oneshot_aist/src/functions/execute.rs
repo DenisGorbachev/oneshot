@@ -1,6 +1,6 @@
 use crate::{to_chat_completion_request_message_chat_completion_response_message, try_into_content_iter, try_into_content_iter_from_messages, user_text, ConfigLike, Outcome, TryIntoContentError, ValidateV1};
 use async_openai::error::OpenAIError;
-use async_openai::types::{ChatChoice, ChatCompletionRequestMessage, CreateChatCompletionRequestArgs, CreateChatCompletionResponse};
+use async_openai::types::{ChatChoice, ChatCompletionRequestMessage, CreateChatCompletionRequest, CreateChatCompletionRequestArgs, CreateChatCompletionResponse};
 use async_openai::Client;
 use derive_more::{Display, Error, From, Into};
 use derive_new::new;
@@ -13,6 +13,7 @@ use std::sync::Arc;
 use syn::File;
 use syn_more::SynFrom;
 use tokio::task::JoinSet;
+use ControlFlow::*;
 
 pub fn execute_v1(path: &Path, _command: Command) -> Outcome {
     let _file = File::syn_from(path)?;
@@ -62,7 +63,92 @@ pub struct Trace<Input, Problem> {
 
 pub type Traces<Input, Problem> = Vec<Trace<Input, Problem>>;
 
-pub async fn execute_v3<Config, Candidate, Problem, Choices, Validate>(choices: Choices, mut validate: Validate, client: Arc<Client<Config>>, args: Arc<CreateChatCompletionRequestArgs>) -> Result<ChatChoice, JoinSet<Result<CreateChatCompletionResponse, OpenAIError>>>
+/// Note: this type doesn't implement many useful traits because [`OpenAIError`] doesn't implement them
+#[derive(new, From, Into, Debug)]
+pub struct TraceReqRes {
+    request: CreateChatCompletionRequest,
+    response_result: Result<CreateChatCompletionResponse, OpenAIError>,
+}
+
+/// This function returns at least one trace even if `gas == 0`.
+pub async fn execute_v3<Config, Candidate, Problem, Choices, Validate>(validate: &mut Validate, mut gas: u32, client_arc: Arc<Client<Config>>, request: Arc<CreateChatCompletionRequest>) -> (Option<ChatChoice>, Vec<TraceReqRes>)
+where
+    Config: ConfigLike + Send + Sync + 'static,
+    Choices: Iterator<Item = ChatChoice>,
+    Validate: FnMut(&ChatChoice) -> ControlFlow<(), Vec<ChatCompletionRequestMessage>>,
+{
+    // TODO: Remove Arc ?
+    let request_initial = request.deref();
+    let response_result_initial = client_arc.chat().create(request_initial.clone()).await;
+    let trace = TraceReqRes::new(request_initial.clone(), response_result_initial);
+    let mut traces_current: Vec<TraceReqRes> = vec![trace];
+    let mut traces_all: Vec<TraceReqRes> = vec![];
+    // TODO: it looks like `traces_current` is never empty
+    while !traces_current.is_empty() {
+        let choices = traces_current
+            .iter()
+            .flat_map(|trace| match &trace.response_result {
+                Ok(response) => response.choices.clone(),
+                // TODO: avoid extra vec allocation
+                Err(_) => vec![],
+            })
+            .collect_vec();
+        traces_all.extend(traces_current);
+        let control_flow = get_correct_choice_or_requests(choices.clone().into_iter(), validate, request_initial.clone());
+        match control_flow {
+            Break(choice) => return (Some(choice), traces_all),
+            Continue(requests) => {
+                let join_set = get_traces_join_set(client_arc.clone(), requests);
+                traces_current = join_set.join_all().await;
+            }
+        }
+        // Check for gas after current choices have been checked
+        if gas == 0 {
+            break;
+        } else {
+            gas -= 1;
+        }
+    }
+    (None, traces_all)
+}
+
+pub fn get_correct_choice_or_requests<Choices, Validate>(choices: Choices, validate: &mut Validate, request_base: CreateChatCompletionRequest) -> ControlFlow<ChatChoice, Vec<CreateChatCompletionRequest>>
+where
+    Choices: Iterator<Item = ChatChoice>,
+    Validate: FnMut(&ChatChoice) -> ControlFlow<(), Vec<ChatCompletionRequestMessage>>,
+{
+    choices
+        .into_iter()
+        .try_fold(vec![], move |mut requests, choice| match validate(&choice) {
+            Break(()) => Break(choice),
+            Continue(mut messages) => {
+                messages.insert(0, to_chat_completion_request_message_chat_completion_response_message(choice.message));
+                let mut request = request_base.clone();
+                request.messages.extend(messages);
+                requests.push(request);
+                Continue(requests)
+            }
+        })
+}
+
+pub fn get_traces_join_set<Config>(client_arc: Arc<Client<Config>>, requests: Vec<CreateChatCompletionRequest>) -> JoinSet<TraceReqRes>
+where
+    Config: ConfigLike + Send + Sync + 'static,
+{
+    requests
+        .into_iter()
+        .map(move |request| {
+            // TODO: Optimize with async closures?
+            let client_arc_clone = client_arc.clone();
+            async move {
+                let response_result = client_arc_clone.chat().create(request.clone()).await;
+                TraceReqRes::new(request, response_result)
+            }
+        })
+        .collect()
+}
+
+pub async fn get_correct_choice_or_branches<Config, Choices, Validate>(choices: Choices, validate: &mut Validate, client_arc: Arc<Client<Config>>, request_arc: Arc<CreateChatCompletionRequest>) -> Result<ChatChoice, JoinSet<Result<CreateChatCompletionResponse, OpenAIError>>>
 where
     Config: ConfigLike + Send + Sync + 'static,
     Choices: Iterator<Item = ChatChoice>,
@@ -73,6 +159,7 @@ where
     use ControlFlow::*;
 
     let mut branches = vec![];
+    // TODO: use Iterator.try_for_each directly?
     for choice in choices {
         match validate(&choice) {
             Continue(mut messages) => {
@@ -88,11 +175,12 @@ where
         .into_iter()
         .map(move |messages| {
             // TODO: Optimize with async closures?
-            let client_clone = client.clone();
-            let args_clone = args.clone();
+            let client_arc_clone = client_arc.clone();
+            let request_arc_clone = request_arc.clone();
             async move {
-                let request = args_clone.deref().clone().messages(messages).build()?;
-                client_clone.chat().create(request).await
+                let mut request = request_arc_clone.deref().clone();
+                request.messages.extend(messages);
+                client_arc_clone.chat().create(request).await
             }
         })
         .collect();
