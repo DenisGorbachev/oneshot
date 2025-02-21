@@ -72,14 +72,13 @@ pub struct TraceReqRes {
 
 /// This function returns at least one trace even if `gas == 0`.
 /// This function uses `Arc<Client>` instead of `Client` because `Client` has a `backoff: backoff::ExponentialBackoff` field, and we want to use a single backoff strategy across multiple threads
-pub async fn execute_v3<Config, Candidate, Problem, Choices, Validate>(validate: &mut Validate, mut gas: u32, client_arc: Arc<Client<Config>>, request: CreateChatCompletionRequest) -> (Option<ChatChoice>, Vec<TraceReqRes>)
+pub async fn execute_v3<Config, Candidate, Problem, Choices, Validate>(validate: &mut Validate, mut gas: u32, client: Arc<Client<Config>>, request: CreateChatCompletionRequest) -> (Option<ChatChoice>, Vec<TraceReqRes>)
 where
     Config: ConfigLike + Send + Sync + 'static,
     Choices: Iterator<Item = ChatChoice>,
     Validate: FnMut(&ChatChoice) -> ControlFlow<(), Vec<ChatCompletionRequestMessage>>,
 {
-    // TODO: Remove Arc ?
-    let response_result_initial = client_arc.chat().create(request.clone()).await;
+    let response_result_initial = client.chat().create(request.clone()).await;
     let trace = TraceReqRes::new(request.clone(), response_result_initial);
     let mut traces_current: Vec<TraceReqRes> = vec![trace];
     let mut traces_all: Vec<TraceReqRes> = vec![];
@@ -98,11 +97,11 @@ where
         match control_flow {
             Break(choice) => return (Some(choice), traces_all),
             Continue(requests) => {
-                let join_set = get_traces_join_set(client_arc.clone(), requests);
+                let join_set = get_traces_join_set(client.clone(), requests);
                 traces_current = join_set.join_all().await;
             }
         }
-        // Check for gas after current choices have been checked
+        // Check for gas only after the code above has run (it needs to have a chance to find the correct `choice`)
         if gas == 0 {
             break;
         } else {
