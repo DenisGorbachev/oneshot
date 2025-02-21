@@ -1,5 +1,8 @@
 use async_openai::types::FinishReason::{ContentFilter, FunctionCall, Length, Stop, ToolCalls};
 use async_openai::types::{ChatChoice, ChatCompletionMessageToolCall, ChatCompletionResponseMessage, ChatCompletionResponseMessageAudio};
+use derive_more::From;
+use fmt_derive::Display;
+use thiserror::Error;
 
 pub fn try_into_content(choice: ChatChoice) -> Result<String, TryIntoContentError> {
     use TryIntoContentError::*;
@@ -36,10 +39,11 @@ pub fn try_into_content(choice: ChatChoice) -> Result<String, TryIntoContentErro
     }
 }
 
+#[derive(Error, Display, From, PartialEq, Clone, Debug)]
 pub enum TryIntoContentError {
+    Refusal(String),
     /// The model returned a message with a `refusal` field
     ContentIsEmpty,
-    Refusal(String),
     UnsupportedToolCalls(Vec<ChatCompletionMessageToolCall>),
     UnsupportedAudio(ChatCompletionResponseMessageAudio),
     LengthFinishReason,

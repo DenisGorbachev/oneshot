@@ -394,7 +394,7 @@ dependencies = [
  "clust",
  "derive-new",
  "derive_more 1.0.0",
- "itertools",
+ "itertools 0.13.0",
  "serde",
 ]
 
@@ -1371,6 +1371,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "itertools"
+version = "0.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2b192c782037fadd9cfa75548310488aabdbf3d2da73885b31bd0abd03351285"
+dependencies = [
+ "either",
+]
+
+[[package]]
 name = "itoa"
 version = "1.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1616,11 +1625,19 @@ name = "oneshot_aist"
 version = "0.1.0"
 dependencies = [
  "async-openai",
+ "derive-new",
+ "derive_more 2.0.1",
+ "fmt-derive",
  "helpful",
+ "itertools 0.14.0",
+ "serde_json",
  "stub-macro",
+ "subtype",
  "syn 2.0.87",
  "syn-more",
  "tempfile",
+ "thiserror 2.0.11",
+ "tokio",
 ]
 
 [[package]]
@@ -1638,7 +1655,7 @@ dependencies = [
  "fmt-derive",
  "fs-err",
  "indoc",
- "itertools",
+ "itertools 0.13.0",
  "oneshot_utils",
  "quick-xml 0.35.0",
  "serde",
@@ -1891,6 +1908,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5b40af805b3121feab8a3c29f04d8ad262fa8e0561883e7653e024ae4479e6de"
 
 [[package]]
+name = "pretty-type-name"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f0f73cdaf19b52e6143685c3606206e114a4dfa969d6b14ec3894c88eb38bd4b"
+
+[[package]]
 name = "prettyplease"
 version = "0.2.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2085,7 +2108,7 @@ dependencies = [
  "cassowary",
  "compact_str",
  "crossterm",
- "itertools",
+ "itertools 0.13.0",
  "lru",
  "paste",
  "stability",
@@ -2702,6 +2725,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "13c2bddecc57b384dee18652358fb23172facb8a2c51ccc10d74c157bdea3292"
 
 [[package]]
+name = "subtype"
+version = "0.1.0"
+source = "git+https://github.com/DenisGorbachev/subtype#5a09e733b5fa6a9a163a6c9ee6f269673360157f"
+dependencies = [
+ "derive_more 1.0.0",
+ "pretty-type-name",
+ "standard-traits",
+]
+
+[[package]]
 name = "syn"
 version = "1.0.109"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3166,7 +3199,7 @@ version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b3644627a5af5fa321c95b9b235a72fd24cd29c648c2c379431e6628655627bf"
 dependencies = [
- "itertools",
+ "itertools 0.13.0",
  "unicode-segmentation",
  "unicode-width",
 ]

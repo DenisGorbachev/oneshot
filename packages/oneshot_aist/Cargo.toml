@@ -6,12 +6,20 @@ rust-version.workspace = true
 publish.workspace = true
 
 [dependencies]
+derive_more = { version = "2.0.1", features = ["full"] }
+derive-new = { version = "0.7.0" }
+fmt-derive = "0.1.2"
+thiserror = { version = "2.0.11" }
 helpful = { workspace = true }
 syn = { workspace = true }
 syn-more = { git = "https://github.com/DenisGorbachev/syn-more" }
 async-openai = { version = "0.27.2" }
 stub-macro = "0.1.6"
 tempfile = "3.16.0"
+itertools = "0.14.0"
+subtype = { git = "https://github.com/DenisGorbachev/subtype" }
+tokio = { workspace = true }
+serde_json = { workspace = true }
 
 [package.metadata.cargo-machete]
 ignored = ["stub-macro"]
