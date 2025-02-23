@@ -1625,6 +1625,7 @@ name = "oneshot_aist"
 version = "0.1.0"
 dependencies = [
  "async-openai",
+ "clap",
  "derive-new",
  "derive_more 2.0.1",
  "fmt-derive",
@@ -1638,6 +1639,7 @@ dependencies = [
  "tempfile",
  "thiserror 2.0.11",
  "tokio",
+ "url",
 ]
 
 [[package]]

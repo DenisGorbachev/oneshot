@@ -20,6 +20,8 @@ itertools = "0.14.0"
 subtype = { git = "https://github.com/DenisGorbachev/subtype" }
 tokio = { workspace = true }
 serde_json = { workspace = true }
+clap = { workspace = true }
+url = "2.5.4"
 
 [package.metadata.cargo-machete]
 ignored = ["stub-macro"]

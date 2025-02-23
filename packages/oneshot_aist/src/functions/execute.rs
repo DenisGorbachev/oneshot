@@ -1,4 +1,5 @@
 use crate::{to_chat_completion_request_message_chat_completion_response_message, try_into_content_iter, try_into_content_iter_from_messages, user_text, ConfigLike, Outcome, TryIntoContentError, ValidateV1};
+use async_openai::config::Config;
 use async_openai::error::OpenAIError;
 use async_openai::types::{ChatChoice, ChatCompletionRequestMessage, CreateChatCompletionRequest, CreateChatCompletionRequestArgs, CreateChatCompletionResponse};
 use async_openai::Client;
@@ -72,10 +73,9 @@ pub struct TraceReqRes {
 
 /// This function returns at least one trace even if `gas == 0`.
 /// This function uses `Arc<Client>` instead of `Client` because `Client` has a `backoff: backoff::ExponentialBackoff` field, and we want to use a single backoff strategy across multiple threads
-pub async fn execute_v3<Config, Candidate, Problem, Choices, Validate>(validate: &mut Validate, mut gas: u32, client: Arc<Client<Config>>, request: CreateChatCompletionRequest) -> (Option<ChatChoice>, Vec<TraceReqRes>)
+pub async fn execute_v3<Conf, Validate>(validate: &mut Validate, mut gas: u32, client: Arc<Client<Conf>>, request: CreateChatCompletionRequest) -> (Option<ChatChoice>, Vec<TraceReqRes>)
 where
-    Config: ConfigLike + Send + Sync + 'static,
-    Choices: Iterator<Item = ChatChoice>,
+    Conf: Config + Send + Sync + 'static,
     Validate: FnMut(&ChatChoice) -> ControlFlow<(), Vec<ChatCompletionRequestMessage>>,
 {
     let response_result_initial = client.chat().create(request.clone()).await;
@@ -130,9 +130,9 @@ where
         })
 }
 
-pub fn get_traces_join_set<Config>(client_arc: Arc<Client<Config>>, requests: Vec<CreateChatCompletionRequest>) -> JoinSet<TraceReqRes>
+pub fn get_traces_join_set<Conf>(client_arc: Arc<Client<Conf>>, requests: Vec<CreateChatCompletionRequest>) -> JoinSet<TraceReqRes>
 where
-    Config: ConfigLike + Send + Sync + 'static,
+    Conf: Config + Send + Sync + 'static,
 {
     requests
         .into_iter()
@@ -147,9 +147,9 @@ where
         .collect()
 }
 
-pub async fn get_correct_choice_or_branches<Config, Choices, Validate>(choices: Choices, validate: &mut Validate, client_arc: Arc<Client<Config>>, request_arc: Arc<CreateChatCompletionRequest>) -> Result<ChatChoice, JoinSet<Result<CreateChatCompletionResponse, OpenAIError>>>
+pub async fn get_correct_choice_or_branches<Conf, Choices, Validate>(choices: Choices, validate: &mut Validate, client_arc: Arc<Client<Conf>>, request_arc: Arc<CreateChatCompletionRequest>) -> Result<ChatChoice, JoinSet<Result<CreateChatCompletionResponse, OpenAIError>>>
 where
-    Config: ConfigLike + Send + Sync + 'static,
+    Conf: Config + Send + Sync + 'static,
     Choices: Iterator<Item = ChatChoice>,
     Validate: FnMut(&ChatChoice) -> ControlFlow<(), Vec<ChatCompletionRequestMessage>>,
 {

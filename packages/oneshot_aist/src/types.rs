@@ -1,5 +1,15 @@
 mod outcome;
 
 pub use outcome::*;
-mod string_input;
-pub use string_input::*;
+
+mod input_string;
+
+pub use input_string::*;
+
+mod command;
+
+pub use command::*;
+
+mod cli;
+
+pub use cli::*;

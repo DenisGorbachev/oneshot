@@ -3,13 +3,13 @@ use async_openai::types::ChatCompletionRequestMessage;
 use subtype::subtype_string;
 
 subtype_string!(
-    pub struct StringInput(String);
+    pub struct InputString(String);
 );
 
-impl StringInput {}
+impl InputString {}
 
-impl From<StringInput> for ChatCompletionRequestMessage {
-    fn from(value: StringInput) -> Self {
+impl From<InputString> for ChatCompletionRequestMessage {
+    fn from(value: InputString) -> Self {
         user_text(value.0)
     }
 }
