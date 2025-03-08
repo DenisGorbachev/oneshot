@@ -8,12 +8,13 @@ publish.workspace = true
 [dependencies]
 derive_more = { version = "2.0.1", features = ["full"] }
 derive-new = { version = "0.7.0" }
+derive-getters = { version = "0.5.0", features = ["auto_copy_getters"] }
 fmt-derive = "0.1.2"
 thiserror = { version = "2.0.11" }
 helpful = { workspace = true }
 syn = { workspace = true }
 syn-more = { git = "https://github.com/DenisGorbachev/syn-more" }
-async-openai = { version = "0.27.2" }
+async-openai = { version = "0.28.0" }
 stub-macro = "0.1.6"
 tempfile = "3.16.0"
 itertools = "0.14.0"
@@ -22,6 +23,8 @@ tokio = { workspace = true }
 serde_json = { workspace = true }
 clap = { workspace = true }
 url = "2.5.4"
+#figment = { version = "0.10.19", features = ["test", "toml"] }
+duct = { workspace = true }
 
 [package.metadata.cargo-machete]
 ignored = ["stub-macro"]
