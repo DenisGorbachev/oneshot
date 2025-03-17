@@ -24,7 +24,8 @@ serde_json = { workspace = true }
 clap = { workspace = true }
 url = "2.5.4"
 #figment = { version = "0.10.19", features = ["test", "toml"] }
-duct = { workspace = true }
+xshell = { version = "0.3.0-pre.2" }
+
 
 [package.metadata.cargo-machete]
 ignored = ["stub-macro"]

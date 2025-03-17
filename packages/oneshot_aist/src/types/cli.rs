@@ -1,6 +1,5 @@
 use crate::{Command, Outcome};
 use clap::Parser;
-use std::io::Write;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about)]
@@ -12,11 +11,11 @@ pub struct Cli {
 }
 
 impl Cli {
-    pub async fn run(self, stdout: &mut impl Write, stderr: &mut impl Write) -> Outcome {
+    pub async fn run(self) -> Outcome {
         let Self {
             command,
         } = self;
-        command.run(stdout, stderr).await
+        command.run().await
     }
 }
 

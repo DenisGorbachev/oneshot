@@ -3,7 +3,6 @@ use async_openai::config::OpenAIConfig;
 use async_openai::types::CreateChatCompletionRequest;
 use async_openai::Client;
 use clap::{value_parser, Parser};
-use std::io::Write;
 use std::sync::Arc;
 use url::Url;
 
@@ -20,7 +19,7 @@ pub struct PrintCommand {
 }
 
 impl PrintCommand {
-    pub async fn run(self, stdout: &mut impl Write, _stderr: &mut impl Write) -> Outcome {
+    pub async fn run(self) -> Outcome {
         let Self {
             base_url,
             api_key,
@@ -63,7 +62,7 @@ impl PrintCommand {
         )
         .await;
 
-        writeln!(stdout, "{:#?}", &output)?;
+        println!("{:#?}", &output);
         Ok(())
     }
 }

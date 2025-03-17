@@ -29,3 +29,5 @@ mod test_cmd_stderr_action;
 pub use test_cmd_stderr_action::*;
 mod branch_name;
 pub use branch_name::*;
+mod goal;
+pub use goal::*;

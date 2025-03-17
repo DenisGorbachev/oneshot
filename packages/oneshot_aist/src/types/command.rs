@@ -1,6 +1,5 @@
 use crate::Outcome;
 use clap::Parser;
-use std::io::Write;
 use Command::*;
 
 #[derive(Parser, Clone, Debug)]
@@ -11,11 +10,11 @@ pub enum Command {
 }
 
 impl Command {
-    pub async fn run(self, stdout: &mut impl Write, stderr: &mut impl Write) -> Outcome {
+    pub async fn run(self) -> Outcome {
         match self {
-            Print(command) => command.run(stdout, stderr).await,
-            Debug(command) => command.run(stdout, stderr).await,
-            Fork(command) => command.run(stdout, stderr).await,
+            Print(command) => command.run().await,
+            Debug(command) => command.run().await,
+            Fork(command) => command.run().await,
         }
     }
 }
