@@ -55,6 +55,8 @@ impl ForkCommand {
             parent_dir,
             parent_name: _,
         } = self;
+        // TODO: Collect git utils from `personal`, `repoconf`, maybe other dirs (search for "\"git" (the start of the command))
+        // TODO: Extract unwrap_or_current_dir
         let parent_dir = parent_dir.unwrap_or_else(|| current_dir().unwrap());
         let _parent_sh = Shell::new()?.with_current_dir(&parent_dir);
         // TODO: Check if parent_dir is a git repository
