@@ -26,7 +26,7 @@ pub fn to_chat_completion_request_message_chat_completion_response_message(messa
         }
         _ => {
             let message_string = serde_json::ser::to_string(&message).expect("`message: ChatCompletionResponseMessage` should serialize successfully");
-            panic!("Unexpected message.role for `message: ChatCompletionResponseMessage` = {}", message_string)
+            panic!("Unexpected message.role for `message: ChatCompletionResponseMessage` = {message_string}")
         }
     }
 }

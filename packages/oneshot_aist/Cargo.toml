@@ -25,6 +25,8 @@ clap = { workspace = true }
 url = "2.5.4"
 #figment = { version = "0.10.19", features = ["test", "toml"] }
 xshell = { version = "0.3.0-pre.2" }
+ra_ap_syntax = "0.0.277"
+ra_ap_text_edit = "0.0.241"
 
 
 [package.metadata.cargo-machete]

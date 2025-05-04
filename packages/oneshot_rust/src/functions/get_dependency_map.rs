@@ -31,7 +31,8 @@ pub fn get_dependency_map(manifest_path: &Path) -> Result<DependencyMap, GetDepe
                     let key = name.to_string();
                     let existing_dependency_opt = dependencies.insert(key, CrateInfo::new(name.to_string(), path_buf));
                     if let Some(existing_dependency) = existing_dependency_opt {
-                        panic!("Package metadata contains multiple entries for a dependency \"{}\"", existing_dependency.name())
+                        let existing_dependency_name = existing_dependency.name();
+                        panic!("Package metadata contains multiple entries for a dependency \"{existing_dependency_name}\"")
                     }
                 }
             }
