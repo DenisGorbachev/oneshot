@@ -1,7 +1,7 @@
 use std::path::Path;
 
-use clust::messages::{MessagesRequestBody, MessagesResponseBody};
 use clust::Client;
+use clust::messages::{MessagesRequestBody, MessagesResponseBody};
 use save_load::format::Format;
 
 use crate::functions::output::{output_request, output_response};

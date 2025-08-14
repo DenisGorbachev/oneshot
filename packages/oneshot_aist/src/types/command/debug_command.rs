@@ -1,5 +1,5 @@
 use crate::{Outcome, Strategy};
-use clap::{value_parser, Parser};
+use clap::{Parser, value_parser};
 use itertools::Itertools;
 use std::path::PathBuf;
 

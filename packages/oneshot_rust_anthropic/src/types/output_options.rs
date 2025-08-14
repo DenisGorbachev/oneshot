@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use clap::{value_parser, Parser};
+use clap::{Parser, value_parser};
 use save_load::format::Format;
 
 use crate::constants::{CONVERSATIONS_SUBDIR, PROJECT_SUBDIR};

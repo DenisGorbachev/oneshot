@@ -1,7 +1,7 @@
+use ratatui::Frame;
 use ratatui::layout::{Constraint, Direction};
 use ratatui::prelude::{Modifier, Style};
-use ratatui::Frame;
-use throbber_widgets_tui::{Throbber, ThrobberState, WhichUse, ASCII};
+use throbber_widgets_tui::{ASCII, Throbber, ThrobberState, WhichUse};
 
 #[allow(dead_code)]
 pub struct App {

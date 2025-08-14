@@ -1,6 +1,6 @@
 use std::path::{Path, PathBuf};
 
-use oneshot_rust::functions::get_dependency_map::{get_dependency_map, DependencyMap};
+use oneshot_rust::functions::get_dependency_map::{DependencyMap, get_dependency_map};
 use oneshot_utils::constants::CARGO_TOML_FILE_NAME;
 use oneshot_utils::types::skip_last_iterator::SkipLast;
 

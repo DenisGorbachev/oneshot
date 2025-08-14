@@ -1,5 +1,5 @@
 use ra_ap_syntax::ast::HasName;
-use ra_ap_syntax::{ast, ast::SourceFile, AstNode, Edition, SyntaxKind, SyntaxNode};
+use ra_ap_syntax::{AstNode, Edition, SyntaxKind, SyntaxNode, ast, ast::SourceFile};
 use ra_ap_text_edit::TextEdit;
 use std::{fs, io, path::Path};
 use stub_macro::stub;

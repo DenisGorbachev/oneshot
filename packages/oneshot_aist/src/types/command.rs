@@ -1,6 +1,6 @@
 use crate::Outcome;
-use clap::Parser;
 use Command::*;
+use clap::Parser;
 
 #[derive(Parser, Clone, Debug)]
 pub enum Command {

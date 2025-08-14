@@ -2,7 +2,7 @@ use std::path::{Path, PathBuf};
 
 use derive_more::{Deref, DerefMut, Into};
 
-use oneshot_utils::functions::get_path_buf_relative_to_package_root::{get_path_buf_relative_to_package_root, GetPathBufRelativeToPackageRootError};
+use oneshot_utils::functions::get_path_buf_relative_to_package_root::{GetPathBufRelativeToPackageRootError, get_path_buf_relative_to_package_root};
 
 /// A `PathBuf` that is relative to the current package
 #[derive(Deref, DerefMut, Into, Ord, PartialOrd, Eq, PartialEq, Hash, Clone, Debug)]

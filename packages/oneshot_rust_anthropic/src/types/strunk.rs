@@ -1,7 +1,7 @@
 use std::iter::once;
 use std::path::PathBuf;
 
-use clap::{value_parser, Parser};
+use clap::{Parser, value_parser};
 use clust::Client;
 use constcat::concat;
 use fs_err::{read_to_string, write};
@@ -82,7 +82,11 @@ impl Strunk {
 
         let conversation_dir_opt = acquire_conversation_dir_from_options(output_dir_opt, now, &mut request_counter)?;
 
-        let response_body = if let Some(conversation_dir) = conversation_dir_opt { create_a_message_with_output(conversation_dir, format, &client, request_body).await? } else { client.create_a_message(request_body).await? };
+        let response_body = if let Some(conversation_dir) = conversation_dir_opt {
+            create_a_message_with_output(conversation_dir, format, &client, request_body).await?
+        } else {
+            client.create_a_message(request_body).await?
+        };
 
         let response_text = into_response_text(response_body);
 

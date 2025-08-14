@@ -30,11 +30,7 @@ impl SourceFile {
 
     pub fn from_path_buf_if_exists(path_buf: impl Into<PathBuf>) -> Option<io::Result<Self>> {
         let path_buf = path_buf.into();
-        if path_buf.exists() {
-            Some(Self::from_path_buf(path_buf))
-        } else {
-            None
-        }
+        if path_buf.exists() { Some(Self::from_path_buf(path_buf)) } else { None }
     }
 
     pub fn from_path_bufs<P: Into<PathBuf>>(path_bufs: impl IntoIterator<Item = P>) -> io::Result<Vec<Self>> {

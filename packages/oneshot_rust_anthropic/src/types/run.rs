@@ -1,7 +1,7 @@
 use std::iter::once;
 use std::path::PathBuf;
 
-use clap::{value_parser, Parser};
+use clap::{Parser, value_parser};
 use clust::Client;
 use time::OffsetDateTime;
 

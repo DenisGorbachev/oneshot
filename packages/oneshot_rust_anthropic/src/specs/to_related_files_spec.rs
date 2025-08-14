@@ -6,7 +6,7 @@ use fmt_derive::Display;
 use fs_err::read_to_string;
 use indexmap::IndexMap;
 use rustc_hash::FxHasher;
-use syn::{parse_file, UseTree};
+use syn::{UseTree, parse_file};
 
 use oneshot_common::types::source_file::SourceFile;
 

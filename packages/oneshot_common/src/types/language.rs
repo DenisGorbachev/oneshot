@@ -2,8 +2,8 @@ use std::path::Path;
 
 use strum::{Display, EnumIter};
 
-use oneshot_utils::traits::maybe_from::MaybeFrom;
 use Language::*;
+use oneshot_utils::traits::maybe_from::MaybeFrom;
 
 /// Use `#[strum(to_string = "LanguageName")]` to specify a proper language name If the proper language name is different from enum variant name (for example: since `Cpp` variant proper name is `"C++"`, use `#[strum(to_string = "C++")]`)
 #[derive(Display, EnumIter, Ord, PartialOrd, Eq, PartialEq, Hash, Clone, Copy, Debug)]

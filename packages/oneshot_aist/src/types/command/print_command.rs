@@ -1,8 +1,8 @@
-use crate::{execute_v3, user_text, Outcome};
+use crate::{Outcome, execute_v3, user_text};
+use async_openai::Client;
 use async_openai::config::OpenAIConfig;
 use async_openai::types::CreateChatCompletionRequest;
-use async_openai::Client;
-use clap::{value_parser, Parser};
+use clap::{Parser, value_parser};
 use std::sync::Arc;
 use url::Url;
 
@@ -41,8 +41,8 @@ impl PrintCommand {
 
         let output = execute_v3(
             &mut |choice| {
-                use std::ops::ControlFlow;
                 use ControlFlow::*;
+                use std::ops::ControlFlow;
                 match &choice.message.content {
                     None => Continue(vec![user_text("Please respond with text content")]),
                     Some(content) => {

@@ -1,10 +1,10 @@
 use crate::{BranchName, Outcome};
-use clap::{value_parser, Parser};
+use clap::{Parser, value_parser};
 use std::env::current_dir;
 use std::fs::create_dir_all;
 use std::path::PathBuf;
 use stub_macro::stub;
-use xshell::{cmd, Shell};
+use xshell::{Shell, cmd};
 
 /// This command attempts to fix a single failing test with multiple different approaches in parallel. This speeds up the fixing process, giving you a fixed test in less time. It also increases the probability of actually fixing the test because the approaches may be vastly different (e.g. different LLMs, different tools).
 /// This command creates a separate git branch for each fix attempt. It commits the changes even if those changes do not fix the test.

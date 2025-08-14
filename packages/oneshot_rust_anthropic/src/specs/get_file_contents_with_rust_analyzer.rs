@@ -6,7 +6,7 @@ use anyhow::anyhow;
 use fs_err::read_to_string;
 use indexmap::IndexMap;
 use lsp_types::{GotoDefinitionParams, GotoDefinitionResponse, TextDocumentIdentifier, TextDocumentPositionParams, Uri};
-use syn::{parse_file, visit::Visit, File};
+use syn::{File, parse_file, visit::Visit};
 
 use crate::functions::uri_to_file_path::to_file_path_from_uri;
 

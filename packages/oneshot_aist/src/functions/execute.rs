@@ -1,8 +1,9 @@
-use crate::{to_chat_completion_request_message_chat_completion_response_message, try_into_content_iter, try_into_content_iter_from_messages, user_text, ConfigLike, Outcome, TryIntoContentError, ValidateV1};
+use crate::{ConfigLike, Outcome, TryIntoContentError, ValidateV1, to_chat_completion_request_message_chat_completion_response_message, try_into_content_iter, try_into_content_iter_from_messages, user_text};
+use ControlFlow::*;
+use async_openai::Client;
 use async_openai::config::Config;
 use async_openai::error::OpenAIError;
 use async_openai::types::{ChatChoice, ChatCompletionRequestMessage, CreateChatCompletionRequest, CreateChatCompletionRequestArgs, CreateChatCompletionResponse};
-use async_openai::Client;
 use derive_more::{Display, Error, From, Into};
 use derive_new::new;
 use itertools::Itertools;
@@ -14,7 +15,6 @@ use std::sync::Arc;
 use syn::File;
 use syn_more::SynFrom;
 use tokio::task::JoinSet;
-use ControlFlow::*;
 
 pub fn execute_v1(path: &Path, _command: Command) -> Outcome {
     let _file = File::syn_from(path)?;
@@ -228,11 +228,7 @@ where
 pub fn check_candidates<Candidate, Problem, Validator>(candidates: impl Iterator<Item = Candidate>, mut validate: impl FnMut(&Candidate) -> Vec<Problem> + 'static) -> impl Iterator<Item = Result<Candidate, (Candidate, Vec<Problem>)>> {
     candidates.map(move |candidate| {
         let problems = validate(&candidate);
-        if problems.is_empty() {
-            Ok(candidate)
-        } else {
-            Err((candidate, problems))
-        }
+        if problems.is_empty() { Ok(candidate) } else { Err((candidate, problems)) }
     })
 }
 

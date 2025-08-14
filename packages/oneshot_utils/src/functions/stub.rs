@@ -16,11 +16,7 @@ pub fn fixme<T>(msg: &str) -> T {
 #[macro_export]
 macro_rules! stub {
     // Case when the first argument is a string literal
-    ($msg:literal, $($args:tt)*) => {{
-        $crate::stub::fixme::<_>($msg)
-    }};
+    ($msg:literal, $($args:tt)*) => {{ $crate::stub::fixme::<_>($msg) }};
     // Default case for when the first argument is not a string literal
-    ($($args:tt)*) => {{
-        $crate::stub::stub::<_>()
-    }};
+    ($($args:tt)*) => {{ $crate::stub::stub::<_>() }};
 }
