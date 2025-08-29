@@ -46,7 +46,7 @@ pulldown-cmark = { version = "0.11.0" }
 throbber-widgets-tui = { version = "0.6.0" }
 ratatui = { version = "0.27.0" }
 tracing = { version = "0.1.40" }
-tracing-subscriber = { version = "0.3.18", features = ["default", "local-time", "env-filter"] }
+tracing-subscriber = { version = "0.3.20", features = ["default", "local-time", "env-filter"] }
 serde_yaml = { version = "0.9.34" }
 time = { version = "0.3.36", features = ["macros", "formatting"] }
 thiserror = { version = "1.0.61" }
