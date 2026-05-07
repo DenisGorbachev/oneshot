@@ -1,8 +1,8 @@
-use crate::{Outcome, execute_v3, user_text};
-use async_openai::Client;
+use crate::{execute_v3, user_text, Outcome};
 use async_openai::config::OpenAIConfig;
 use async_openai::types::CreateChatCompletionRequest;
-use clap::{Parser, value_parser};
+use async_openai::Client;
+use clap::{value_parser, Parser};
 use std::sync::Arc;
 use url::Url;
 
@@ -62,7 +62,7 @@ impl PrintCommand {
         )
         .await;
 
-        println!("{:#?}", &output);
+        println!("{output:#?}");
         Ok(())
     }
 }
