@@ -1,15 +1,15 @@
-use crate::{to_chat_completion_request_message_chat_completion_response_message, try_into_content_iter_from_messages, ConfigLike, TryIntoContentError};
+use crate::{ConfigLike, TryIntoContentError, to_chat_completion_request_message_chat_completion_response_message, try_into_content_iter_from_messages};
+use ControlFlow::*;
+use async_openai::Client;
 use async_openai::config::Config;
 use async_openai::error::OpenAIError;
 use async_openai::types::{ChatChoice, ChatCompletionRequestMessage, CreateChatCompletionRequest, CreateChatCompletionRequestArgs, CreateChatCompletionResponse};
-use async_openai::Client;
 use derive_more::{Display, Error, From, Into};
 use derive_new::new;
 use itertools::Itertools;
 use std::ops::{ControlFlow, Deref};
 use std::sync::Arc;
 use tokio::task::JoinSet;
-use ControlFlow::*;
 
 /// This function returns at least one trace even if `gas == 0`.
 /// This function uses `Arc<Client>` instead of `Client` because `Client` has a `backoff: backoff::ExponentialBackoff` field, and we want to use a single backoff strategy across multiple threads

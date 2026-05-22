@@ -1,8 +1,8 @@
-use crate::{execute_v3, user_text, Outcome};
+use crate::{Outcome, execute_v3, user_text};
+use async_openai::Client;
 use async_openai::config::OpenAIConfig;
 use async_openai::types::CreateChatCompletionRequest;
-use async_openai::Client;
-use clap::{value_parser, Parser};
+use clap::{Parser, value_parser};
 use std::sync::Arc;
 use url::Url;
 

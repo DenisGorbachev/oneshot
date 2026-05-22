@@ -10,7 +10,6 @@ mod context;
 
 pub use context::*;
 
-
 mod input_like;
 pub use input_like::*;
 mod problem_like;
