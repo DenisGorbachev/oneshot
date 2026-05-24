@@ -2,10 +2,10 @@ use std::path::{Path, PathBuf};
 
 pub fn strip_line_number_from_path(path: &Path) -> &Path {
     let path_str = path.to_str().unwrap_or("");
-    if let Some(pos) = path_str.rfind(':') {
-        if path_str[pos + 1..].chars().all(char::is_numeric) {
-            return Path::new(&path_str[..pos]);
-        }
+    if let Some(pos) = path_str.rfind(':')
+        && path_str[pos + 1..].chars().all(char::is_numeric)
+    {
+        return Path::new(&path_str[..pos]);
     }
     path
 }

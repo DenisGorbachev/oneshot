@@ -32,10 +32,10 @@ pub fn remove_attrs_from_items(src: &mut String, attr_name: &str, item_name: &st
             for node in attr.syntax().ancestors() {
                 match node.kind() {
                     SyntaxKind::FN => {
-                        if let Some(the_fn) = ast::Fn::cast(node.clone()) {
-                            if let Some(name) = the_fn.name() {
-                                keep = name.text() == item_name;
-                            }
+                        if let Some(the_fn) = ast::Fn::cast(node.clone())
+                            && let Some(name) = the_fn.name()
+                        {
+                            keep = name.text() == item_name;
                         }
                         break;
                     }
