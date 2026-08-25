@@ -2,10 +2,10 @@ use std::path::{Path, PathBuf};
 
 pub fn strip_line_number_from_path(path: &Path) -> &Path {
     let path_str = path.to_str().unwrap_or("");
-    if let Some(pos) = path_str.rfind(':')
-        && path_str[pos + 1..].chars().all(char::is_numeric)
+    if let Some((path_without_line, line_number)) = path_str.rsplit_once(':')
+        && line_number.chars().all(char::is_numeric)
     {
-        return Path::new(&path_str[..pos]);
+        return Path::new(path_without_line);
     }
     path
 }
@@ -20,16 +20,11 @@ pub fn strip_line_number_from_path_buf(path_buf: &mut PathBuf) {
         .file_name()
         .and_then(|s| s.to_str())
         .and_then(|file_name| {
-            file_name.rfind(':').and_then(|colon_index| {
-                if file_name[colon_index + 1..]
-                    .chars()
-                    .all(|c| c.is_ascii_digit())
-                {
-                    Some(file_name[..colon_index].to_string())
-                } else {
-                    None
-                }
-            })
+            let (file_name_without_line, line_number) = file_name.rsplit_once(':')?;
+            line_number
+                .chars()
+                .all(|character| character.is_ascii_digit())
+                .then(|| file_name_without_line.to_string())
         })
     {
         path_buf.set_file_name(new_file_name)
@@ -44,8 +39,6 @@ pub fn strip_line_numbers_from_path_bufs(path_bufs: &mut [PathBuf]) {
 
 #[cfg(test)]
 mod tests {
-    use std::path::PathBuf;
-
     use super::*;
 
     #[test]

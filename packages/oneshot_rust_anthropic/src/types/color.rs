@@ -1,4 +1,4 @@
-use std::io::IsTerminal;
+use std::io::{IsTerminal, stdout};
 
 use clap::ValueEnum;
 use strum::Display;
@@ -19,7 +19,7 @@ impl From<Color> for bool {
         match value {
             Always => true,
             Never => false,
-            Auto => std::io::stdout().is_terminal(),
+            Auto => stdout().is_terminal(),
         }
     }
 }

@@ -9,3 +9,6 @@ publish.workspace = true
 serde = { workspace = true, optional = true }
 derive-getters = { workspace = true }
 derive-new = { workspace = true }
+
+[lints]
+workspace = true

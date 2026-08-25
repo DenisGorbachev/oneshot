@@ -1,6 +1,6 @@
 use ratatui::Frame;
-use ratatui::layout::{Constraint, Direction};
-use ratatui::prelude::{Modifier, Style};
+use ratatui::layout::{Constraint, Direction, Layout};
+use ratatui::prelude::{Color, Modifier, Style};
 use throbber_widgets_tui::{ASCII, Throbber, ThrobberState, WhichUse};
 
 #[allow(dead_code)]
@@ -17,7 +17,7 @@ impl App {
 
 #[allow(dead_code)]
 fn ui(f: &mut Frame, app: &mut App) {
-    let chunks = ratatui::layout::Layout::default()
+    let chunks = Layout::default()
         .direction(Direction::Horizontal)
         .margin(1)
         .constraints([Constraint::Percentage(50), Constraint::Percentage(50)].as_ref())
@@ -30,12 +30,8 @@ fn ui(f: &mut Frame, app: &mut App) {
     // Set full with state
     let full = Throbber::default()
         .label("Running...")
-        .style(Style::default().fg(ratatui::style::Color::Cyan))
-        .throbber_style(
-            Style::default()
-                .fg(ratatui::style::Color::Red)
-                .add_modifier(Modifier::BOLD),
-        )
+        .style(Style::default().fg(Color::Cyan))
+        .throbber_style(Style::default().fg(Color::Red).add_modifier(Modifier::BOLD))
         .throbber_set(ASCII)
         .use_type(WhichUse::Spin);
     f.render_stateful_widget(full, chunks[1], &mut app.throbber_state);

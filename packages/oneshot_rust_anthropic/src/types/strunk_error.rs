@@ -1,3 +1,5 @@
+use std::io::Error as IoError;
+
 use crate::types::conversation_dir_if_not_exists_error::ConversationDirIfNotExistsError;
 use clust::messages::MessagesError;
 use derive_more::{Error, From};
@@ -6,7 +8,7 @@ use save_load::errors::save_one_error::SaveOneError;
 
 #[derive(Error, Display, From, Debug)]
 pub enum StrunkError {
-    TheIoError(std::io::Error),
+    TheIoError(IoError),
     TheSynError(syn::Error),
     TheMessagesError(MessagesError),
     TheSerializeToFileError(SaveOneError),

@@ -6,6 +6,7 @@ use derive_more::{Error, From};
 use derive_new::new;
 use fmt_derive::Display;
 use fs_err::read_to_string;
+use quick_xml::se::to_string;
 
 /// `content` is not guaranteed to come from `path_buf` because it is possible to call `SourceFile::new` with any arguments (this is intentional)
 #[derive(new, Getters, Dissolve, From, Ord, PartialOrd, Eq, PartialEq, Default, Hash, Clone, Debug)]
@@ -38,7 +39,7 @@ impl SourceFile {
     }
 
     pub fn to_xml(&self) -> Result<String, quick_xml::DeError> {
-        quick_xml::se::to_string(self)
+        to_string(self)
     }
 
     pub fn from_path_buf_to_xml_if_exists(path_buf: impl Into<PathBuf>) -> Result<Option<String>, FromPathBufToXmlIfExists> {

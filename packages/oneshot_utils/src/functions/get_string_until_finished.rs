@@ -1,5 +1,3 @@
-use std::future::Future;
-
 pub async fn get_string_until_finished<Get, Out>(mut get: Get) -> String
 where
     Get: FnMut(&str) -> Out,

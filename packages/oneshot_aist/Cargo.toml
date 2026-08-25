@@ -26,6 +26,9 @@ xshell = { version = "0.3.0-pre.2" }
 ra_ap_syntax = "0.0.277"
 ra_ap_text_edit = "0.0.241"
 
+[lints]
+workspace = true
+
 
 [package.metadata.cargo-machete]
 ignored = ["stub-macro"]

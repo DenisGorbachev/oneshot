@@ -45,7 +45,7 @@ where
         if gas == 0 {
             break;
         } else {
-            gas -= 1;
+            gas = gas.saturating_sub(1);
         }
     }
     (None, traces_all)

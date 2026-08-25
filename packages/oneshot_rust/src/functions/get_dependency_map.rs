@@ -1,3 +1,4 @@
+use std::io::Error as IoError;
 use std::path::Path;
 
 use derive_more::{Error, From};
@@ -44,6 +45,6 @@ pub fn get_dependency_map(manifest_path: &Path) -> Result<DependencyMap, GetDepe
 
 #[derive(Error, Display, From, Debug)]
 pub enum GetDependenciesError {
-    IoError(std::io::Error),
+    IoError(IoError),
     SerdeJsonError(serde_json::Error),
 }

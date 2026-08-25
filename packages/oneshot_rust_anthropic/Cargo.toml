@@ -40,5 +40,8 @@ rustc-hash = { workspace = true }
 tempfile = { workspace = true }
 lsp-types = { workspace = true }
 
+[lints]
+workspace = true
+
 [package.metadata.cargo-machete]
 ignored = ["proc-macro2"]

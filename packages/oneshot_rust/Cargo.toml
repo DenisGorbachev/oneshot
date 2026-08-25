@@ -20,3 +20,6 @@ pulldown-cmark = { workspace = true }
 serde_json = { workspace = true }
 duct = { workspace = true }
 indexmap = { workspace = true }
+
+[lints]
+workspace = true

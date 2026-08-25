@@ -1,6 +1,7 @@
 use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
+use std::io::Result as IoResult;
 use std::path::Path;
 
 /// Paths may be specified by the full path (as in `std::io::Result`)
@@ -8,7 +9,7 @@ use std::path::Path;
 /// Use statements may refer to super-module items (e.g. `super::*`)
 /// Some paths are "hidden": the use statements bring the trait in scope, which adds methods on the types that implement this trait. Such paths can only be extracted from use statements.
 /// Some paths may refer to the use statements that are in a local scope (for example: `use MyEnum::*; let a = MyVariantA;`)
-pub fn get_first_line_from_file<P: AsRef<Path>>(path: P) -> std::io::Result<String> {
+pub fn get_first_line_from_file<P: AsRef<Path>>(path: P) -> IoResult<String> {
     let file = File::open(path)?;
     let mut reader = BufReader::new(file);
     let mut line = String::new();

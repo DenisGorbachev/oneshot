@@ -51,8 +51,6 @@ pub fn remove_first_line_matching(path: &Path, filter: &str) -> io::Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::fs;
-    use std::io::Write;
     use tempfile::NamedTempFile;
 
     #[test]
